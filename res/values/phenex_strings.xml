@@ -21,4 +21,7 @@
     <string name="phenex_version">PhenexOS version</string>
     <string name="phenex_version_default">Unknown</string>
 
+    <!-- SuperSU -->
+    <string name="supersu_title">SuperSU</string>
+
 </resources>
