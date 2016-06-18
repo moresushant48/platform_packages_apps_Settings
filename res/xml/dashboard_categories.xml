@@ -114,7 +114,7 @@
                 android:id="@+id/navbar"
                 android:title="@string/hexagon_navbar_settings"
                 android:fragment="com.android.settings.aicp.Navbar"
-                android:icon="@drawable/aicp_navbar_icon"
+                android:icon="@drawable/hexagon_navbar_icon"
                 />
 
         <!-- Themes -->

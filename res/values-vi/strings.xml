@@ -39,6 +39,7 @@
     <string name="header_category_system" msgid="2816866961183068977">"Hệ thống"</string>
     <string name="turn_on_radio" msgid="8706561489788373676">"Bật radio"</string>
     <string name="turn_off_radio" msgid="1820294552893884115">"Tắt radio"</string>
+    <string name="hexagon_navbar_settings">Thanh điều hướng </string>
     <string name="sms_over_ims_on" msgid="5085290395865632925">"Bật SMS qua IMS"</string>
     <string name="sms_over_ims_off" msgid="8354792045992793959">"Tắt SMS qua IMS"</string>
     <string name="ims_reg_required_on" msgid="3885152087309614653">"Yêu cầu bật đăng ký IMS"</string>
