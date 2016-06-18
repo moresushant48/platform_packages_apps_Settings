@@ -19,7 +19,7 @@
     <dimen name="device_memory_usage_button_height">32dip</dimen>
     <dimen name="action_bar_switch_padding">16dip</dimen>
 
-    <dimen name="app_icon_size">40dip</dimen>
+    <dimen name="app_icon_size">64dip</dimen>
     <dimen name="screen_margin_sides">64dip</dimen>
     <dimen name="screen_margin_top">72dip</dimen>
     <dimen name="screen_margin_bottom">48dip</dimen>
@@ -46,9 +46,9 @@
     <dimen name="setup_preference_icon_frame_width">60dp</dimen>
     <dimen name="setup_wizard_margin_top">24dp</dimen>
 
-    <dimen name="divider_height">3dip</dimen>
-    <dimen name="divider_margin_top">6dip</dimen>
-    <dimen name="divider_margin_bottom">7dip</dimen>
+    <dimen name="divider_height">0dip</dimen>
+    <dimen name="divider_margin_top">0dip</dimen>
+    <dimen name="divider_margin_bottom">0dip</dimen>
     <dimen name="vert_divider_width">1dip</dimen>
 
     <!--  Size of icons in the top-level of settings  -->
@@ -80,7 +80,7 @@
     <dimen name="caption_preview_text_size">48dp</dimen>
 
     <!-- ActionBar height -->
-    <dimen name="actionbar_size">56dip</dimen>
+    <dimen name="actionbar_size">64dip</dimen>
 
     <!-- ActionBar contentInsetStart -->
     <dimen name="actionbar_contentInsetStart">16dp</dimen>
@@ -97,27 +97,27 @@
     <dimen name="dashboard_padding_bottom">0dp</dimen>
 
     <!-- Dashboard category padding start / end -->
-    <dimen name="dashboard_category_padding_start">0dp</dimen>
-    <dimen name="dashboard_category_padding_end">0dp</dimen>
+    <dimen name="dashboard_category_padding_start">12dp</dimen>
+    <dimen name="dashboard_category_padding_end">12dp</dimen>
 
     <!-- Dashboard category panel elevation -->
-    <dimen name="dashboard_category_elevation">4dp</dimen>
+    <dimen name="dashboard_category_elevation">0dp</dimen>
 
     <!-- Dashboard category title layout height -->
-    <dimen name="dashboard_category_title_height">48dp</dimen>
+    <dimen name="dashboard_category_title_height">40dp</dimen>
 
     <!-- Dashboard category title margin start -->
-    <dimen name="dashboard_category_title_margin_start">16dp</dimen>
+    <dimen name="dashboard_category_title_margin_start">8dp</dimen>
 
     <!-- Dashboard tile minimum height -->
-    <dimen name="dashboard_tile_minimum_height">72dp</dimen>
+    <dimen name="dashboard_tile_minimum_height">50dp</dimen>
 
     <!-- Dashboard image tile size -->
-    <dimen name="dashboard_tile_image_size">24dp</dimen>
+    <dimen name="dashboard_tile_image_size">54dp</dimen>
 
     <!-- Dashboard tile image margin start / end -->
-    <dimen name="dashboard_tile_image_margin_start">16dp</dimen>
-    <dimen name="dashboard_tile_image_margin_end">32dp</dimen>
+    <dimen name="dashboard_tile_image_margin_start">8dp</dimen>
+    <dimen name="dashboard_tile_image_margin_end">8dp</dimen>
 
     <!-- SwitchBar margin start / end -->
     <dimen name="switchbar_margin_start">16dp</dimen>

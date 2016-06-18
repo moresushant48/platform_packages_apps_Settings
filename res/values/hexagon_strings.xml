@@ -16,7 +16,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Aicp Settings -->
-    <string name="aicp_settings_title">Hexagon Rom</string>
+    <string name="hexagon_settings_title">Hexagon Rom</string>
     <string name="aicp_settings_external_title">AICP External</string>
     <string name="header_category_personalization">Personalization</string>
     <string name="supersu_title">SuperSU</string>
@@ -444,7 +444,7 @@
     <!-- Power menu torch -->
     <string name="power_menu_torch_title">Torch</string>
 
-    <string name="aicp_navbar_settings">Tha Navbar</string>
+    <string name="hexagon_navbar_settings">Navibar</string>
 
     <!-- Navigation Bar -->
     <string name="navbar_interface_title">Interface</string>
