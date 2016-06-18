@@ -23,6 +23,34 @@
         <item name="android:paddingEnd">4dip</item>
     </style>
 
+    <style name="Theme.SettingsBase" parent="@android:style/Theme.Material.Light.DarkActionBar" >
+		<item name="android:colorPrimary">#ff222222</item>
+	    <item name="android:colorPrimaryDark">#ff222222</item>
+		<item name="android:statusBarColor">#ff222222</item>
+		<item name="android:navigationBarColor">#ff222222</item>
+	</style>
+	
+	    <style name="Theme.AlertDialog" parent="@android:style/Theme.Material.Light.Dialog.Alert">
+     <item name="android:colorAccent">#ffE84E40</item>    
+    </style>
+    
+    <style name="Theme.DialogWhenLarge" parent="@style/Theme.SettingsBase">
+			<item name="android:statusBarColor">#ff222222</item>
+	</style>
+		
+	<style name="Theme.DialogWhenLarge" parent="@android:style/Theme.Material.Light.DialogWhenLarge">
+       <item name="android:colorAccent">#ffE84E40</item>
+       	<item name="android:colorPrimary">#ff222222</item>
+	    <item name="android:colorPrimaryDark">#ff222222</item>
+    </style>
+   
+   <style name="Theme.DateTimeSettingsSetupWizard" parent="@android:style/Theme.Material.Light.NoActionBar" />
+    <style name="Theme.SettingsLicenseActivity" parent="@android:style/Theme.Material.Panel" />
+    <style name="Theme.AppPicker" parent="@android:style/Theme.Material.Light.Dialog" />
+    <style name="Theme.SettingsDialog" parent="@android:style/Theme.Material.Light.Dialog.NoActionBar" />
+    <style name="Theme.SettingsAlertDialog" parent="@*android:style/Theme.Material.Light.Dialog.Alert" />
+    
+
     <style name="info_value">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
@@ -297,8 +325,10 @@
     <style name="TextAppearance.Small" parent="@android:style/TextAppearance.Material.Small" />
     <style name="TextAppearance.Switch" parent="@android:style/TextAppearance.Material.Title" />
 
-    <style name="TextAppearance.CategoryTitle" parent="@android:style/TextAppearance.Material.Body2">
-        <item name="android:textColor">?android:attr/colorAccent</item>
+    <style name="TextAppearance.CategoryTitle" parent="@android:style/TextAppearance.Material.Small">
+		<item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#ff222222</item>
     </style>
 
     <style name="TextAppearance.TileTitle" parent="@android:style/TextAppearance.Material.Subhead" />
