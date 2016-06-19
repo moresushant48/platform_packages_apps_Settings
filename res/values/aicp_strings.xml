@@ -15,7 +15,7 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <!-- Hexagon Settings -->
+    <!-- Aicp Settings -->
     <string name="hexagon_settings_title">Hexagon Rom</string>
     <string name="aicp_settings_external_title">AICP External</string>
     <string name="header_category_personalization">Personalization</string>
@@ -445,6 +445,9 @@
     <string name="power_menu_torch_title">Torch</string>
 
     <string name="hexagon_navbar_settings">Navibar</string>
+
+    <string name="Hexagon_version">Hexagon Version</string>
+    <string name="Hexagon_version_default">V1.0</string>
 
     <!-- Navigation Bar -->
     <string name="navbar_interface_title">Interface</string>

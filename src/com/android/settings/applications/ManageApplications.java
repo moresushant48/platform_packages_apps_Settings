@@ -87,7 +87,8 @@ import java.util.Comparator;
  * intent.
  */
 public class ManageApplications extends InstrumentedFragment
-        implements OnItemClickListener, OnItemSelectedListener {
+        implements OnItemClickListener, OnItemSelectedListener,
+        ResetAppsHelper.ResetCompletedCallback {
 
     static final String TAG = "ManageApplications";
     static final boolean DEBUG = Log.isLoggable(TAG, Log.DEBUG);
@@ -276,7 +277,7 @@ public class ManageApplications extends InstrumentedFragment
 
         mInvalidSizeStr = getActivity().getText(R.string.invalid_size_value);
 
-        mResetAppsHelper = new ResetAppsHelper(getActivity());
+        mResetAppsHelper = new ResetAppsHelper(getActivity(), this);
     }
 
 
@@ -303,13 +304,6 @@ public class ManageApplications extends InstrumentedFragment
             lv.setTextFilterEnabled(true);
             lv.setFastScrollEnabled(true);
             mListView = lv;
-            mApplications = new ApplicationsAdapter(mApplicationsState, this, mFilter);
-            if (savedInstanceState != null) {
-                mApplications.mHasReceivedLoadEntries =
-                        savedInstanceState.getBoolean(EXTRA_HAS_ENTRIES, false);
-            }
-            mListView.setAdapter(mApplications);
-            mListView.setRecyclerListener(mApplications);
 
             Utils.prepareCustomPreferencesList(container, mRootView, mListView, false);
         }
@@ -319,8 +313,6 @@ public class ManageApplications extends InstrumentedFragment
         if (container instanceof PreferenceFrameLayout) {
             ((PreferenceFrameLayout.LayoutParams) mRootView.getLayoutParams()).removeBorders = true;
         }
-
-        createHeader();
 
         mResetAppsHelper.onRestoreInstanceState(savedInstanceState);
 
@@ -366,6 +358,14 @@ public class ManageApplications extends InstrumentedFragment
             FrameLayout pinnedHeader = (FrameLayout) mRootView.findViewById(R.id.pinned_header);
             AppHeader.createAppHeader(getActivity(), null, mVolumeName, null, pinnedHeader);
         }
+        mApplications = new ApplicationsAdapter(mApplicationsState, this, mFilter);
+        if (savedInstanceState != null) {
+            mApplications.mHasReceivedLoadEntries =
+                    savedInstanceState.getBoolean(EXTRA_HAS_ENTRIES, false);
+        }
+        mListView.setAdapter(mApplications);
+        mListView.setRecyclerListener(mApplications);
+        createHeader();
     }
 
     private int getDefaultFilter() {
@@ -619,6 +619,14 @@ public class ManageApplications extends InstrumentedFragment
         }
         mFilterAdapter.setFilterEnabled(FILTER_APPS_ENABLED, hasDisabledApps);
         mFilterAdapter.setFilterEnabled(FILTER_APPS_DISABLED, hasDisabledApps);
+    }
+
+    @Override
+    public void onResetCompleted() {
+        /* mExtraInfoBridge can be null when doing reset app preference without
+         * any changes on apps */
+        if (mApplications.mExtraInfoBridge != null)
+            mApplications.mExtraInfoBridge.onPackageListChanged();
     }
 
     static class FilterSpinnerAdapter extends ArrayAdapter<CharSequence> {

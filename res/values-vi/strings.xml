@@ -24,7 +24,6 @@
     <string name="dlg_close" msgid="7471087791340790015">"Đóng"</string>
     <string name="dlg_switch" msgid="6243971420240639064">"Chuyển đổi"</string>
     <string name="device_info_default" msgid="7847265875578739287">"Không xác định"</string>
-    <string name="Hexagon_version">Phiên bản Hexagon</string>
     <plurals name="show_dev_countdown" formatted="false" msgid="7201398282729229649">
       <item quantity="other">Bây giờ, bạn chỉ cần thực hiện <xliff:g id="STEP_COUNT_1">%1$d</xliff:g> bước nữa là trở thành nhà phát triển.</item>
       <item quantity="one">Bây giờ, bạn chỉ cần thực hiện <xliff:g id="STEP_COUNT_0">%1$d</xliff:g> bước nữa là trở thành nhà phát triển.</item>
@@ -39,7 +38,6 @@
     <string name="header_category_system" msgid="2816866961183068977">"Hệ thống"</string>
     <string name="turn_on_radio" msgid="8706561489788373676">"Bật radio"</string>
     <string name="turn_off_radio" msgid="1820294552893884115">"Tắt radio"</string>
-    <string name="hexagon_navbar_settings">Thanh điều hướng </string>
     <string name="sms_over_ims_on" msgid="5085290395865632925">"Bật SMS qua IMS"</string>
     <string name="sms_over_ims_off" msgid="8354792045992793959">"Tắt SMS qua IMS"</string>
     <string name="ims_reg_required_on" msgid="3885152087309614653">"Yêu cầu bật đăng ký IMS"</string>
