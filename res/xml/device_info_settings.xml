@@ -18,7 +18,7 @@
         android:title="@string/about_settings">
 		<!-- Custom Logo Settings-->
     	<PreferenceScreen android:layout="@layout/settings_logo" android:key="settings_logo">
-        	<intent android:action="android.intent.action.VIEW" android:data="http://droidvn.com/" />
+        	<intent android:action="android.intent.action.VIEW" android:data="http://droidvn.com/forums/" />
     	</PreferenceScreen>
 	
 
