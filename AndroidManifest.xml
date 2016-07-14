@@ -2191,7 +2191,7 @@
 
         <!-- Aicp Extras -->
         <activity android:name="Settings$AicpSettingsExternalActivity"
-            android:label="@string/aicp_settings_external_title"
+            android:label="@string/hexagon_settings_external_title"
             android:taskAffinity="com.android.settings"
             android:parentActivityName="Settings" >
             <intent-filter>
