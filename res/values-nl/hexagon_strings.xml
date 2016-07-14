@@ -14,7 +14,7 @@
 
     <!-- Aicp Settings -->
     <string name="aicp_settings_title">AICP Extras</string>
-    <string name="aicp_settings_external_title">AICP Extern</string>
+    <string name="hexagon_settings_external_title">Hexagon Extern</string>
     <string name="header_category_personalization">Personalisatie</string>
     <string name="supersu_title">SuperSU</string>
     <string name="reset">Herstellen</string>

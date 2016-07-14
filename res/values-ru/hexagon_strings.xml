@@ -17,7 +17,7 @@
 
     <!-- Aicp Settings -->
     <string name="aicp_settings_title">Расширенные настройки</string>
-    <string name="aicp_settings_external_title">AICP</string>
+    <string name="hexagon_settings_external_title">Hexagon</string>
     <string name="header_category_personalization">Персонализация</string>
     <string name="supersu_title">Суперпользователь</string>
     <string name="reset">Сброс</string>
