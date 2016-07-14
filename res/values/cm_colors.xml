@@ -16,7 +16,7 @@ limitations under the License.
 -->
 <resources>
     <color name="floating_action_button_touch_tint">#80dedede</color>
-    <color name="theme_accent">#ffE84E40</color>
+    <color name="theme_accent">#03A9F4</color>
 
     <color name="screencolor_background">#50000000</color>
     <drawable name="transparent_background">#00000000</drawable>

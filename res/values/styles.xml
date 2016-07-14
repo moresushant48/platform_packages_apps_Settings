@@ -24,17 +24,17 @@
 	</style>
 	
 	    <style name="Theme.AlertDialog" parent="@android:style/Theme.Material.Light.Dialog.Alert">
-     <item name="android:colorAccent">#ffE84E40</item>    
+     <item name="android:colorAccent">#03A9F4</item>    
     </style>
     
     <style name="Theme.DialogWhenLarge" parent="@style/Theme.SettingsBase">
-			<item name="android:statusBarColor">#ff222222</item>
+			<item name="android:statusBarColor">#03A9F4</item>
 	</style>
 		
 	<style name="Theme.DialogWhenLarge" parent="@android:style/Theme.Material.Light.DialogWhenLarge">
-       <item name="android:colorAccent">#ffE84E40</item>
-       	<item name="android:colorPrimary">#ff222222</item>
-	    <item name="android:colorPrimaryDark">#ff222222</item>
+       <item name="android:colorAccent">#03A9F4</item>
+       	<item name="android:colorPrimary">#03A9F4</item>
+	    <item name="android:colorPrimaryDark">#03A9F4</item>
     </style>
    
    <style name="Theme.DateTimeSettingsSetupWizard" parent="@android:style/Theme.Material.Light.NoActionBar" />
@@ -328,7 +328,7 @@
 	<style name="TextAppearance.CategoryTitle" parent="@android:style/TextAppearance.Material.Small">
 		<item name="android:textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">#ff222222</item>
+        <item name="android:textColor">#03A9F4</item>
     </style>
 
     <style name="TextAppearance.TileTitle" parent="@android:style/TextAppearance.Material.Subhead" />
@@ -385,7 +385,7 @@
     </style>
 
     <style name="SetupWizardStorageStyle" parent="@style/SuwThemeMaterial.Light">
-        <item name="android:colorAccent">#ffE84E40</item>
+        <item name="android:colorAccent">#03A9F4</item>
         <item name="suwDecorPaddingTop">@dimen/storage_decor_padding_top</item>
     </style>
 
