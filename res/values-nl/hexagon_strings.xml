@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright (C) 2015 AICP
+
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
      You may obtain a copy of the License at
+
           http://www.apache.org/licenses/LICENSE-2.0
+
      Unless required by applicable law or agreed to in writing, software
      distributed under the License is distributed on an "AS IS" BASIS,
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -12,14 +15,11 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <!-- Aicp Settings -->
-    <string name="aicp_settings_title">AICP Extras</string>
     <string name="hexagon_settings_external_title">Hexagon Extern</string>
     <string name="header_category_personalization">Personalisatie</string>
     <string name="supersu_title">SuperSU</string>
     <string name="reset">Herstellen</string>
     <string name="attention">Attentie</string>
-    <string name="easter_egg_snack">"A. I. C. P."</string>
 
     <string name="general_options_title">Algemeen</string>
 
@@ -52,7 +52,7 @@
     <string name="volume_steps_alarm_title">Volume-stappen: Alarm</string>
     <string name="volume_steps_dtmf_title">Volume-stappen: DTMF-tonen</string>
     <string name="volume_steps_music_title">Volume-stappen: Muziek</string>
-    <string name="volume_steps_notification_title">Volume-stappen: Notoficatie</string>
+    <string name="volume_steps_notification_title">Volume-stappen: Notificatie</string>
     <string name="volume_steps_ring_title">Volume-stappen: Beltoon</string>
     <string name="volume_steps_system_title">Volume-stappen: Systeem</string>
     <string name="volume_steps_voice_call_title">Volume-stappen: Spraak</string>
@@ -456,6 +456,8 @@
     <string name="info_pref_note_title">Opmerking</string>
     <string name="smartbar_interface">SmartBar</string>
     <string name="icon_pack_picker_dialog_title">Icoonpakketten</string>
+    <string name="navigation_bar_left_title">Linkshandige modus</string>
+    <string name="navigation_bar_left_summary">Schakel dit ALLEEN in als het nodig is. Pulse en thema-weergave worden uitgeschakeld.</string>
 
     <!-- Actions dialog and default task values set in ActionPreference xml-->
     <string name="choose_action_title">Actie kiezen</string>
@@ -611,13 +613,21 @@
     <string name="smartbar_button_animation_ripple">Golven</string>
     <string name="smartbar_button_animation_spring">Veren</string>
     <string name="smartbar_factory_reset_title">Standaard instellingen terugzetten</string>
-    <string name="smartbar_factory_reset_summary">SmartBar naar de standaard instellingen terugzetten</string>
     <string name="smartbar_factory_reset_confirm">Weet je zeker dat je de SmartBar naar de standaard instellingen wil terugzetten?</string>
     <string name="smartbar_ime_action_title">Akties voor invoermethoden</string>
     <string name="smartbar_ime_action_summary">Instellen welke toetsen getoond worden als een on-screen toetsenbord actief is</string>
     <string name="smartbar_ime_action_none">Niets</string>
     <string name="smartbar_ime_action_arrows">Invoer-pijlen</string>
     <string name="smartbar_ime_action_switcher">Toetsenbord schakelaar</string>
+    <string name="smartbar_backup_current_config_title">Save profile</string>
+    <string name="smartbar_restore_config_title">Profiel terugzetten</string>
+    <string name="smartbar_config_name_edit_dialog_title">Smartbar profielnaam</string>
+    <string name="smartbar_config_name_edit_dialog_message">Voer naam in of laat leeg</string>
+    <string name="smartbar_config_dialog_title">Smartbar profielen</string>
+    <string name="smartbar_config_backup_success_toast">Smartbar profiel successvol opgeslagen</string>
+    <string name="smartbar_config_restore_success_toast">Smartbar profiel successvol teruggezet</string>
+    <string name="smartbar_config_backup_error_toast">Fout bij opslaan Smartbar profiel</string>
+    <string name="smartbar_config_restore_error_toast">Fout bij herstellen Smartbar profiel</string>
 
     <!-- Heads Up Timeout -->
     <string name="heads_up_time_out_title">Time out</string>
@@ -651,5 +661,12 @@
 
     <!-- Hide apps from recents -->
     <string name="hide_from_recents_add_app">App toevoegen</string>
+
+    <!-- Volume dialog timeout-->
+    <string name="volume_dialog_timeout_title">Time-out dialoogvenster Volume</string>
+
+    <!-- Volume Dialog Expanded -->
+    <string name="volume_dialog_force_expanded_title">Uitgebreid dialoogvenster Volume</string>
+    <string name="volume_dialog_force_expanded_summary">Open het dialoogvenster Volume altijd in uitgebreide modus. De eerste keer moet op de expand toets worden gedrukt.</string>
 
 </resources>

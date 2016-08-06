@@ -553,7 +553,6 @@
   <string name="volume_adjust_sounds_title">أصوات تعديل حجم الصوت </string>
   <!-- Hardware tunables - Vibrator intensity -->
   <string name="vibrator_intensity_title">شدة الاهتزاز</string>
-  <string name="vibrator_warning">لا ينصح باستخدام قيم أعلى من %1$d</string>
   <!-- Hardware tunables - Color calibration -->
   <string name="color_calibration_title">معايرة الألوان</string>
   <string name="color_calibration_summary">معايرة للألوان على الشاشة</string>
@@ -1056,4 +1055,8 @@
   <string name="app_notification_no_ongoing_on_keyguard_summary">عدم إظهار إشعارات ثابتة من هذا التطبيق على شاشة التأمين</string>
   <!-- CmRadioInfo -->
   <!-- Radio Control (IMS/MBN etc.) -->
+  <!-- Lock screen wallpaper -->
+  <!-- Format string for fingerprint location message -->
+  <!-- Fingerprint sensor locations -->
+  <!-- SIM status format string -->
 </resources>

@@ -546,7 +546,6 @@
   <string name="volume_adjust_sounds_title">ध्वनी समायोजन ध्वनी</string>
   <!-- Hardware tunables - Vibrator intensity -->
   <string name="vibrator_intensity_title">कंपन तीव्रता</string>
-  <string name="vibrator_warning">%1$d पेक्षा उच्च मूल्यांची शिफारस केली जात नाही</string>
   <!-- Hardware tunables - Color calibration -->
   <string name="color_calibration_title">रंग कॅलिब्रेशन</string>
   <string name="color_calibration_summary">ऑन-स्क्रीन रंग कॅलिब्रेट करा</string>
@@ -1015,4 +1014,8 @@
   <string name="app_notification_no_ongoing_on_keyguard_summary">या अनुप्रयोगाकडूनच्या सातत्यपूर्ण सूचना लॉक स्क्रीनवर कधीही दाखवू नका</string>
   <!-- CmRadioInfo -->
   <!-- Radio Control (IMS/MBN etc.) -->
+  <!-- Lock screen wallpaper -->
+  <!-- Format string for fingerprint location message -->
+  <!-- Fingerprint sensor locations -->
+  <!-- SIM status format string -->
 </resources>

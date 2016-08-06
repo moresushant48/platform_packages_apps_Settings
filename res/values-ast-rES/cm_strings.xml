@@ -544,7 +544,6 @@ Calca pa empareyar el preséu Bluetooth enantes de configurar los disparadores.<
   <string name="volume_adjust_sounds_title">Sonios d\'axuste de volume</string>
   <!-- Hardware tunables - Vibrator intensity -->
   <string name="vibrator_intensity_title">Intensidá de vibración</string>
-  <string name="vibrator_warning">Nun son recomendables valores superiores a %1$d</string>
   <!-- Hardware tunables - Color calibration -->
   <string name="color_calibration_title">Calibración de color</string>
   <string name="color_calibration_summary">Calibrar los colores de la pantalla</string>
@@ -1007,4 +1006,8 @@ Calca pa empareyar el preséu Bluetooth enantes de configurar los disparadores.<
   <string name="cm_radio_info_adb_log_off_label">Activar el rexistru en ADB de la radio</string>
   <string name="cm_radio_info_diag_log_on_label">Desactivar el rexistru Diag</string>
   <string name="cm_radio_info_diag_log_off_label">Activar el rexistru Diag</string>
+  <!-- Lock screen wallpaper -->
+  <!-- Format string for fingerprint location message -->
+  <!-- Fingerprint sensor locations -->
+  <!-- SIM status format string -->
 </resources>

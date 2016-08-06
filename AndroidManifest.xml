@@ -394,6 +394,12 @@
                 android:parentActivityName="Settings">
         </activity>
 
+        <activity android:name=".SubSettings$SecuritySubSettings"
+                android:taskAffinity="com.android.settings"
+                android:configChanges="orientation|keyboardHidden|screenSize"
+                android:parentActivityName="Settings">
+        </activity>
+
         <activity android:name="Settings$BluetoothSettingsActivity"
                 android:label="@string/bluetooth_settings_title"
                 android:taskAffinity="">
@@ -1984,7 +1990,7 @@
 
         <!-- TODO: Is this needed? -->
         <activity android:name="BandMode"
-                  android:theme="@android:style/Theme.Dialog"
+                  android:theme="@style/Theme.SettingsDialog"
                   android:process="com.android.phone">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
