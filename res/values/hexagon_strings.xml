@@ -234,22 +234,6 @@
     <string name="onthego_alpha_title">On-The-Go Alpha</string>
     <string name="onthego_alpha_summary">Alpha value of the On-The-Go overlay.</string>
 
-    <!-- SlimDim -->
-    <string name="dim_nav_buttons_category">SlimDim</string>
-    <string name="dim_nav_buttons_title">Dim buttons after inactivity</string>
-    <string name="dim_nav_buttons_summary">Dim navigation bar buttons after not interacting with navigation bar for a specified time</string>
-    <string name="dim_nav_buttons_timeout_title">Timeout before dimming</string>
-    <string name="dim_nav_buttons_timeout_summary">Time (in milliseconds) to wait before dimming buttons</string>
-    <string name="dim_nav_buttons_alpha_title">Dim alpha</string>
-    <string name="dim_nav_buttons_alpha_summary">Alpha value to dim buttons to</string>
-    <string name="dim_nav_buttons_animate_title">Dim animation</string>
-    <string name="dim_nav_buttons_animate_summary">Animate the alpha fade</string>
-    <string name="dim_nav_buttons_animate_duration_title">Animation duration</string>
-    <string name="dim_nav_buttons_animate_duration_summary">Duration (in milliseconds) of the alpha animation</string>
-    <string name="dim_nav_buttons_touch_anywhere_title">Listen for touches on entire screen</string>
-    <string name="dim_nav_buttons_touch_anywhere_summary_on">Touching anywhere on the screen will cause buttons to un-dim</string>
-    <string name="dim_nav_buttons_touch_anywhere_summary_off">Only touches on the navbar will cause buttons to un-dim</string>
-
     <!-- Less Notification sounds -->
     <string name="notifications_category_title">Notifications</string>
     <string name="less_notification_sounds_title">Less frequent notification sounds</string>
@@ -650,5 +634,19 @@
 
     <!-- Navbar buttons transparency -->
     <string name="navbar_buttons_alpha_title">Buttons transparency</string>
+
+    <!-- Halo -->
+    <!-- Label for are-halo-notifications-allowed checkbox in app details [CHAR LIMIT=20] -->
+    <string name="app_halo_label_black">Blacklist from HALO</string>
+    <string name="app_halo_label_white">Whitelist from HALO</string>
+
+    <!-- Halo blacklist -->
+    <string name="app_notification_halo_title">Show notification in HALO</string>
+    <string name="app_notification_halo_summary">Let this app show notifications in HALO</string>
+    <string name="filter_notif_no_halo">No notifications in HALO</string>
+    <string name="notifications_four_items"><xliff:g id="notif_state" example="Priority">%1$s</xliff:g> / <xliff:g id="notif_state" example="Priority">%2$s</xliff:g> / <xliff:g id="notif_state" example="Priority">%3$s</xliff:g> / <xliff:g id="notif_state" example="Priority">%4$s</xliff:g></string>
+
+    <string name="toggle_package_install_overlay_check_title">Disable permission overlay check</string>
+    <string name="toggle_package_install_overlay_check_summary">WARNING\u003A this disables a security check to prevent possible tapjacking! Use only if you understand the consequences.</string>
 
 </resources>
