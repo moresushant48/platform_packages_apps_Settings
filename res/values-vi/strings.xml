@@ -16,6 +16,7 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="hex_ota">Cập nhật Hexagon</string>
     <string name="yes" msgid="4676390750360727396">"Có"</string>
     <string name="no" msgid="6731231425810196216">"Không"</string>
     <string name="create" msgid="3578857613172647409">"Tạo"</string>

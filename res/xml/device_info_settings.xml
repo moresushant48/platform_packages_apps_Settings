@@ -20,7 +20,15 @@
     	<PreferenceScreen android:layout="@layout/settings_logo" android:key="settings_logo">
         	<intent android:action="android.intent.action.VIEW" android:data="http://droidvn.com/forums/" />
     	</PreferenceScreen>
-	
+
+	        <!-- Device status - launches activity -->
+        <PreferenceScreen android:key="status_info"
+                android:title="@string/hex_ota">
+            <intent android:action="android.intent.action.MAIN"
+                    android:targetPackage="com.hexagon.ota"
+                    android:targetClass="com.hexagon.ota.MainActivity" />
+        </PreferenceScreen>
+
 
         <!-- System update settings - launches activity -->
         <PreferenceScreen android:key="system_update_settings"
