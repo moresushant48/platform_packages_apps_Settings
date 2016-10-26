@@ -24,8 +24,8 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.EditTextPreference;
+import android.support.v7.preference.CheckBoxPreference;
+import android.support.v7.preference.EditTextPreference;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -62,10 +62,9 @@ public final class DeviceProfilesSettings extends DialogFragment implements
     private CachedBluetoothDevice mCachedDevice;
     private LocalBluetoothManager mManager;
     private LocalBluetoothProfileManager mProfileManager;
+
     private ViewGroup mProfileContainer;
     private TextView mProfileLabel;
-    private static final int OK_BUTTON = -1;
-
     private EditTextPreference mDeviceNamePref;
 
     private final HashMap<LocalBluetoothProfile, CheckBoxPreference> mAutoConnectPrefs
@@ -292,11 +291,8 @@ public final class DeviceProfilesSettings extends DialogFragment implements
         DialogInterface.OnClickListener disconnectListener =
                 new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                // Disconnect only when user has selected OK
-                if (which == OK_BUTTON) {
-                    device.disconnect(profile);
-                    profile.setPreferred(device.getDevice(), false);
-                }
+                device.disconnect(profile);
+                profile.setPreferred(device.getDevice(), false);
                 if (profile instanceof MapProfile) {
                     device.setMessagePermissionChoice(BluetoothDevice.ACCESS_REJECTED);
                 }

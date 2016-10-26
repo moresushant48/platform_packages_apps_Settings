@@ -1,6 +1,5 @@
 /**
  * Copyright (C) 2013 The Android Open Source Project
- * Copyright (C) 2016 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy
@@ -26,7 +25,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceFrameLayout;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -40,11 +38,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.internal.logging.MetricsProto.MetricsEvent;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import com.android.internal.logging.MetricsLogger;
 import com.android.settings.DevelopmentSettings;
 import com.android.settings.InstrumentedFragment;
 import com.android.settings.R;
@@ -52,7 +50,7 @@ import com.android.settings.R;
 public class AppOpsSummary extends InstrumentedFragment {
     // layout inflater object used to inflate views
     private LayoutInflater mInflater;
-
+    
     private ViewGroup mContentContainer;
     private View mRootView;
     private ViewPager mViewPager;
@@ -68,7 +66,7 @@ public class AppOpsSummary extends InstrumentedFragment {
 
     @Override
     protected int getMetricsCategory() {
-        return MetricsLogger.APP_OPS_SUMMARY;
+        return MetricsEvent.APP_OPS_SUMMARY;
     }
 
     class MyPagerAdapter extends FragmentPagerAdapter implements ViewPager.OnPageChangeListener {
@@ -135,28 +133,20 @@ public class AppOpsSummary extends InstrumentedFragment {
 
         mPageNames = getResources().getTextArray(R.array.app_ops_categories_cm);
 
-        int defaultTab = -1;
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            defaultTab = Arrays.asList(mPageNames).indexOf(bundle.getString("appops_tab", ""));
-        }
-
         mViewPager = (ViewPager) rootView.findViewById(R.id.pager);
         mAdapter = new MyPagerAdapter(getChildFragmentManager(),
                 filterTemplates(AppOpsState.ALL_TEMPLATES));
         mViewPager.setAdapter(mAdapter);
-        if (defaultTab >= 0) {
-            mViewPager.setCurrentItem(defaultTab);
-        }
         mViewPager.setOnPageChangeListener(mAdapter);
         PagerTabStrip tabs = (PagerTabStrip) rootView.findViewById(R.id.tabs);
+
+        // HACK - https://code.google.com/p/android/issues/detail?id=213359
+        ((ViewPager.LayoutParams)tabs.getLayoutParams()).isDecor = true;
 
         Resources.Theme theme = tabs.getContext().getTheme();
         TypedValue typedValue = new TypedValue();
         theme.resolveAttribute(android.R.attr.colorAccent, typedValue, true);
-        final int colorAccent = typedValue.resourceId != 0
-                ? getContext().getColor(typedValue.resourceId)
-                : getContext().getColor(R.color.switch_accent_color);
+        final int colorAccent = getContext().getColor(typedValue.resourceId);
         tabs.setTabIndicatorColor(colorAccent);
 
         // We have to do this now because PreferenceFrameLayout looks at it
@@ -187,8 +177,7 @@ public class AppOpsSummary extends InstrumentedFragment {
     }
 
     private boolean shouldShowSystemApps() {
-        return mPreferences.getBoolean("show_system_apps", true) &&
-                mActivity.getResources().getBoolean(R.bool.config_showBuiltInAppsForPG);
+        return mPreferences.getBoolean("show_system_apps", true);
     }
 
     @Override
@@ -206,11 +195,7 @@ public class AppOpsSummary extends InstrumentedFragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.appops_manager, menu);
         menu.findItem(R.id.show_user_apps).setChecked(shouldShowUserApps());
-        if (!mActivity.getResources().getBoolean(R.bool.config_showBuiltInAppsForPG)) {
-            menu.removeItem(R.id.show_system_apps);
-        } else {
-            menu.findItem(R.id.show_system_apps).setChecked(shouldShowSystemApps());
-        }
+        menu.findItem(R.id.show_system_apps).setChecked(shouldShowSystemApps());
     }
 
     private void resetCounters() {
