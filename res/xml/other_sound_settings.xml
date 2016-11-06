@@ -44,6 +44,12 @@
             android:key="touch_sounds"
             android:title="@string/touch_sounds_title" />
 
+    <!-- Volume adjust sound -->
+    <cyanogenmod.preference.CMSystemSettingSwitchPreference
+            android:key="volume_adjust_sounds_enabled"
+            android:title="@string/volume_adjust_sounds_title"
+            android:defaultValue="true" />
+
     <!-- Vibrate on touch -->
     <SwitchPreference
             android:key="vibrate_on_touch"
@@ -60,5 +66,13 @@
             android:key="emergency_tone"
             android:title="@string/emergency_tone_title"
             android:summary="%s" />
+
+    <ListPreference
+            android:key="less_notification_sounds"
+            android:title="@string/less_notification_sounds_title"
+            android:summary="@string/less_notification_sounds_summary"
+            android:entries="@array/less_notification_sounds_entries"
+            android:entryValues="@array/less_notification_sounds_values"
+            android:persistent="false" />
 
 </PreferenceScreen>

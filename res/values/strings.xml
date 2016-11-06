@@ -24,10 +24,10 @@
     <string name="allow">Allow</string>
     <!-- Strings for Dialog deny button -->
     <string name="deny">Deny</string>
-    <string name="hexagon_settings_title">Hexagon Rom</string>
-    <string name="header_category_hexagon">Hexagon</string>
-    <string name="supersu_title">Superuser</string>
-
+    <string name="hex_ota">Hexagon update</string>
+    <!-- About phone screen, Hexagon version -->
+    <string name="mod_version">Hexagon version</string>
+    <string name="hexagon_version">2.0</string>
     <string name="wifiap_settings_desc">WLAN wifiap can share this phone\u2019s data Internet connection with other PC/mobile devices via WLAN.</string>
     <string name="wifiap_settings_indication">After the WLAN wifiap is turned on, other PC/mobile devices can connect to it and start using the internet by following steps:</string>
     <string name="wifiap_settings_indication_step1">1. Turn on WLAN on PC/Mobile device.</string>
@@ -2288,6 +2288,8 @@
     <string name="kernel_version">Kernel version</string>
     <!-- About phone screen,  setting option name  [CHAR LIMIT=40] -->
     <string name="build_number">Build number</string>
+    <!-- About phone screen,  setting option name  [CHAR LIMIT=40] -->
+    <string name="qgp_version">QGP Version</string>
     <!-- About phone screen,  setting option name  [CHAR LIMIT=40] -->
     <string name="selinux_status">SELinux status</string>
 
@@ -7169,7 +7171,7 @@
     <string name="backup_disabled">Back up disabled</string>
 
     <!-- Summary of device info page [CHAR LIMIT=NONE] -->
-    <string name="about_summary">Android <xliff:g id="version" example="6.0">%1$s</xliff:g></string>
+    <string name="about_summary">AICP Android <xliff:g id="version" example="6.0">%1$s</xliff:g></string>
 
     <!-- TODO: Update these strings with the finalized ones. -->
     <!-- Title for dialog displayed when user clicks on a setting locked by an admin [CHAR LIMIT=30] -->
@@ -7584,4 +7586,15 @@
     <string name="tethering_no_sim_card_text">Please install SIM card in order to share your data connection with other devices using Mobile HotSpot or USB tethering for Internet access.</string>
     <string name="tether_settings_launch_title">Mobile HotSpot</string>
     <string name="wifi_tether_first_use_message">Set up Mobile HotSpot at the First Use</string>
+
+    <!-- Protected Apps -->
+    <string name="menu_hidden_apps_delete">Reset</string>
+    <string name="menu_hidden_apps_reset_lock">Reset pattern lock</string>
+    <string name="protected_apps">Protected apps</string>
+    <string name="saving_protected_components">Saving component state</string>
+
+    <string name="lte_data_and_voice_calling_enabled">LTE data and Voice Calling (IMS/VoLTE) service enabled </string>
+    <string name="lte_data_service_enabled">LTE data service enabled </string>
+    <string name="turn_off_wifi_dialog_title">Turn off Wi-Fi</string>
+    <string name="turn_off_wifi_dialog_text">Wi-Fi is turned off when Mobile HotSpot is active. To turn on Wi-Fi, please turn off Mobile HotSpot.</string>
 </resources>

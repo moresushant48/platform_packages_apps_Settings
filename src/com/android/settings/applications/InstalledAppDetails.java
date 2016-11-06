@@ -30,6 +30,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -72,6 +73,7 @@ import android.webkit.IWebViewUpdateService;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.android.settings.cyanogenmod.ProtectedAppsReceiver;
 
 import com.android.internal.logging.MetricsProto.MetricsEvent;
 import com.android.internal.os.BatterySipper;
@@ -125,12 +127,14 @@ public class InstalledAppDetails extends AppInfoBase
     // Menu identifiers
     public static final int UNINSTALL_ALL_USERS_MENU = 1;
     public static final int UNINSTALL_UPDATES = 2;
+    public static final int OPEN_PROTECTED_APPS = 3;
 
     // Result code identifiers
     public static final int REQUEST_UNINSTALL = 0;
     private static final int REQUEST_REMOVE_DEVICE_ADMIN = 1;
 
     private static final int SUB_INFO_FRAGMENT = 1;
+    public static final int REQUEST_TOGGLE_PROTECTION = 3;
 
     private static final int LOADER_CHART_DATA = 2;
 
@@ -272,6 +276,12 @@ public class InstalledAppDetails extends AppInfoBase
             }
         } catch (RemoteException e) {
             throw new RuntimeException(e);
+        }
+
+        // This is a protected app component.
+        // You cannot a uninstall a protected component
+        if (mPackageInfo.applicationInfo.protect) {
+            enabled = false;
         }
 
         mUninstallButton.setEnabled(enabled);
@@ -432,6 +442,9 @@ public class InstalledAppDetails extends AppInfoBase
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
         menu.add(0, UNINSTALL_ALL_USERS_MENU, 1, R.string.uninstall_all_users_text)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, OPEN_PROTECTED_APPS, Menu.NONE, R.string.protected_apps)
+                .setIcon(getResources().getDrawable(R.drawable.folder_lock))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
     }
 
     @Override
@@ -461,6 +474,9 @@ public class InstalledAppDetails extends AppInfoBase
             RestrictedLockUtils.setMenuItemAsDisabledByAdmin(getActivity(),
                     uninstallUpdatesItem, mAppsControlDisallowedAdmin);
         }
+
+        menu.findItem(OPEN_PROTECTED_APPS).setVisible(mPackageInfo != null &&
+                mPackageInfo.applicationInfo != null && mPackageInfo.applicationInfo.protect);
     }
 
     @Override
@@ -472,6 +488,10 @@ public class InstalledAppDetails extends AppInfoBase
             case UNINSTALL_UPDATES:
                 uninstallPkg(mAppEntry.info.packageName, false, false);
                 return true;
+            case OPEN_PROTECTED_APPS:
+                // Verify protection for toggling protected component status
+                Intent protectedApps = new Intent(getActivity(), LockPatternActivity.class);
+                startActivityForResult(protectedApps, REQUEST_TOGGLE_PROTECTION);
         }
         return false;
     }
@@ -495,6 +515,38 @@ public class InstalledAppDetails extends AppInfoBase
                 setIntentAndFinish(true, true);
             }
         }
+        if (requestCode == REQUEST_TOGGLE_PROTECTION) {
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    new ToggleProtectedAppComponents().execute();
+                    break;
+                case Activity.RESULT_CANCELED:
+                    // User failed to enter/confirm a lock pattern, do nothing
+                    break;
+            }
+        }
+    }
+
+    private class ToggleProtectedAppComponents extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            getActivity().invalidateOptionsMenu();
+            if (!refreshUi()) {
+                setIntentAndFinish(true, true);
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            ArrayList<ComponentName> components = new ArrayList<ComponentName>();
+            for (ActivityInfo aInfo : mPackageInfo.activities) {
+                components.add(new ComponentName(aInfo.packageName, aInfo.name));
+            }
+
+            ProtectedAppsReceiver.updateProtectedAppComponentsAndNotify(getActivity(),
+                    components, PackageManager.COMPONENT_VISIBLE_STATUS);
+            return null;
+        }
     }
 
     // Utility method to set application label and icon.
@@ -502,7 +554,7 @@ public class InstalledAppDetails extends AppInfoBase
         final View appSnippet = mHeader.findViewById(R.id.app_snippet);
         mState.ensureIcon(mAppEntry);
         setupAppSnippet(appSnippet, mAppEntry.label, mAppEntry.icon,
-                pkgInfo != null ? pkgInfo.versionName : null);
+                pkgInfo != null ? pkgInfo.versionName : null, pkgInfo.packageName);
     }
 
     private boolean signaturesMatch(String pkg1, String pkg2) {
@@ -991,7 +1043,7 @@ public class InstalledAppDetails extends AppInfoBase
     }
 
     public static void setupAppSnippet(View appSnippet, CharSequence label, Drawable icon,
-            CharSequence versionName) {
+            CharSequence versionName, String packageName) {
         LayoutInflater.from(appSnippet.getContext()).inflate(R.layout.widget_text_views,
                 (ViewGroup) appSnippet.findViewById(android.R.id.widget_frame));
 
@@ -1002,6 +1054,12 @@ public class InstalledAppDetails extends AppInfoBase
         labelView.setText(label);
         // Version number of application
         TextView appVersion = (TextView) appSnippet.findViewById(R.id.widget_text1);
+
+        if (packageName != null) {
+            TextView appPackage = (TextView) appSnippet.findViewById(R.id.widget_text2);
+            appPackage.setText(packageName);
+            appPackage.setSelected(true);
+        }
 
         if (!TextUtils.isEmpty(versionName)) {
             appVersion.setSelected(true);

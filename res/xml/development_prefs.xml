@@ -33,6 +33,11 @@
             android:title="@*android:string/bugreport_title"
             android:dialogTitle="@*android:string/bugreport_title" />
 
+    <cyanogenmod.preference.CMSecureSettingSwitchPreference
+            android:key="advanced_reboot"
+            android:title="@string/advanced_reboot_title"
+            android:summary="@string/advanced_reboot_summary" />
+
     <PreferenceScreen
             android:key="local_backup_password"
             android:title="@string/local_backup_password_title"
@@ -117,13 +122,36 @@
         android:entries="@array/root_access_entries"
         android:entryValues="@array/root_access_values" />
 
+    <Preference
+        android:key="root_appops"
+        android:title="@string/root_appops_title"
+        android:summary="@string/root_appops_summary" />
+
     <PreferenceCategory android:key="debug_debugging_category"
             android:title="@string/debug_debugging_category">
 
         <SwitchPreference
             android:key="enable_adb"
-            android:title="@string/enable_adb"
-            android:summary="@string/enable_adb_summary"/>
+            android:title="@string/enable_adb_cm"
+            android:summary="@string/enable_adb_summary_cm" />
+
+        <cyanogenmod.preference.CMSecureSettingSwitchPreference
+            android:key="adb_notify"
+            android:title="@string/adb_notify"
+            android:summary="@string/adb_notify_summary"
+            android:dependency="enable_adb" />
+
+        <SwitchPreference
+            android:key="adb_over_network"
+            android:title="@string/adb_over_network"
+            android:summary="@string/adb_over_network_summary"
+            android:dependency="enable_adb" />
+
+        <SwitchPreference
+            android:key="adb_always_notify"
+            android:title="@string/adb_always_notify"
+            android:summary="@string/adb_always_notify_summary"
+            android:dependency="enable_adb" />
 
         <Preference android:key="clear_adb_keys"
                 android:title="@string/clear_adb_keys" />
@@ -265,10 +293,6 @@
             android:entries="@array/overlay_display_devices_entries"
             android:entryValues="@array/overlay_display_devices_values" />
 
-        <com.android.settings.display.DensityPreference
-            android:key="density"
-            android:title="@string/developer_smallest_width" />
-
     </PreferenceCategory>
 
     <PreferenceCategory android:key="debug_hw_drawing_category"
@@ -389,6 +413,7 @@
             android:key="force_resizable_activities"
             android:title="@string/force_resizable_activities"
             android:summary="@string/force_resizable_activities_summary"/>
+
      </PreferenceCategory>
 
 </PreferenceScreen>
