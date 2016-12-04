@@ -32,7 +32,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.hardware.usb.UsbManager;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiConfiguration.AuthAlgorithm;
@@ -41,9 +40,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.UserHandle;
 import android.os.UserManager;
 import android.support.v14.preference.SwitchPreference;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceScreen;
 import android.telephony.TelephonyManager;
@@ -60,14 +59,9 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static android.content.Context.TELEPHONY_SERVICE;
 import static android.net.ConnectivityManager.TETHERING_BLUETOOTH;
 import static android.net.ConnectivityManager.TETHERING_USB;
 import static android.net.ConnectivityManager.TETHERING_WIFI;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.CheckBox;
 
 /*
  * Displays preferences for Tethering.
@@ -81,15 +75,14 @@ public class TetherSettings extends RestrictedSettingsFragment
     private static final String ENABLE_WIFI_AP_EXT = "enable_wifi_ap_ext";
     private static final String ENABLE_BLUETOOTH_TETHERING = "enable_bluetooth_tethering";
     private static final String TETHER_CHOICE = "TETHER_TYPE";
+    private static final String HOTSPOT_TIMEOUT = "hotstpot_inactivity_timeout";
     private static final String TETHERING_HELP = "tethering_help";
     private static final String DATA_SAVER_FOOTER = "disabled_on_data_saver";
     private static final String ACTION_EXTRA = "choice";
     private static final String ACTION_EXTRA_VALUE = "value";
     private static final String SHAREPREFERENCE_DEFAULT_WIFI = "def_wifiap_set";
     private static final String SHAREPREFERENCE_FIFE_NAME = "MY_PERFS";
-    private static final String KEY_FIRST_LAUNCH_HOTSPOT = "FirstLaunchHotspotTethering";
-    private static final String KEY_TURN_OFF_WIFI_SHOW_AGAIN = "TurnOffWifiShowAgain";
-    private static final String ACTION_HOTSPOT_PRE_CONFIGURE = "Hotspot_PreConfigure";
+    private static final String ACTION_HOTSPOT_CONFIGURE = "Hotspot_PreConfigure";
     private static final String ACTION_HOTSPOT_POST_CONFIGURE = "Hotspot_PostConfigure";
     private static final String CONFIGURE_RESULT = "PreConfigure_result";
     private static final String ACTION_HOTSPOT_CONFIGURE_RRSPONSE =
@@ -107,6 +100,8 @@ public class TetherSettings extends RestrictedSettingsFragment
     private PreferenceScreen mTetherHelp;
 
     private SwitchPreference mBluetoothTether;
+
+    private ListPreference mHotspotInactivityTimeout;
 
     private BroadcastReceiver mTetherChangeReceiver;
 
@@ -189,8 +184,7 @@ public class TetherSettings extends RestrictedSettingsFragment
 
         mCreateNetwork = findPreference(WIFI_AP_SSID_AND_SECURITY);
 
-        boolean enableWifiApSettingsExt = getResources().
-                         getBoolean(R.bool.show_wifi_hotspot_settings);
+        boolean enableWifiApSettingsExt = getResources().getBoolean(R.bool.show_wifi_hotspot_settings);
         boolean isWifiApEnabled = getResources().getBoolean(R.bool.hide_wifi_hotspot);
         checkDefaultValue(getActivity());
         if (enableWifiApSettingsExt) {
@@ -198,19 +192,10 @@ public class TetherSettings extends RestrictedSettingsFragment
                     (HotspotPreference) findPreference(ENABLE_WIFI_AP_EXT);
             getPreferenceScreen().removePreference(findPreference(ENABLE_WIFI_AP));
             getPreferenceScreen().removePreference(mCreateNetwork);
-            mEnableWifiAp.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                public boolean onPreferenceClick(Preference preference) {
-                    Intent intent = new Intent();
-                    if(isNeedShowHelp(getActivity())) {
-                        intent.setAction(ACTION_HOTSPOT_PRE_CONFIGURE);
-                    } else {
-                        intent.setAction("com.qti.ap.settings");
-                    }
-                    intent.setPackage("com.qualcomm.qti.extsettings");
-                    mEnableWifiAp.setIntent(intent);
-                    return false;
-                }
-            });
+            Intent intent = new Intent();
+            intent.setAction("com.qti.ap.settings");
+            intent.setPackage("com.qualcomm.qti.extsettings");
+            mEnableWifiAp.setIntent(intent);
         } else {
             mEnableWifiAp =
                     (SwitchPreference) findPreference(ENABLE_WIFI_AP);
@@ -230,6 +215,7 @@ public class TetherSettings extends RestrictedSettingsFragment
 
         mUsbTether = (SwitchPreference) findPreference(USB_TETHER_SETTINGS);
         mBluetoothTether = (SwitchPreference) findPreference(ENABLE_BLUETOOTH_TETHERING);
+        mHotspotInactivityTimeout = (ListPreference) findPreference(HOTSPOT_TIMEOUT);
 
         mDataSaverBackend.addListener(this);
 
@@ -266,6 +252,7 @@ public class TetherSettings extends RestrictedSettingsFragment
                 mBluetoothTether.setChecked(false);
             }
         }
+        mHotspotInactivityTimeout.setOnPreferenceChangeListener(this);
         // Set initial state based on Data Saver mode.
         onDataSaverChanged(mDataSaverBackend.isDataSaverEnabled());
     }
@@ -314,6 +301,15 @@ public class TetherSettings extends RestrictedSettingsFragment
                     mWifiConfig.SSID,
                     mSecurityType[index]));
         }
+        updateHotspotTimeoutSummary(mWifiConfig);
+    }
+
+    private void updateHotspotTimeoutSummary(WifiConfiguration wifiConfig) {
+        mHotspotInactivityTimeout.setValue(
+                (wifiConfig == null) ? "0" : Long.toString(wifiConfig.wifiApInactivityTimeout));
+        mHotspotInactivityTimeout.setSummary(String.format(
+                getString(R.string.hotstpot_inactivity_timeout_summary_text,
+                        mHotspotInactivityTimeout.getEntry())));
     }
 
     @Override
@@ -566,96 +562,31 @@ public class TetherSettings extends RestrictedSettingsFragment
         }
     }
 
-    private boolean showNoSimCardDialog(Context ctx) {
-        TelephonyManager tm = (TelephonyManager) ctx.getSystemService(TELEPHONY_SERVICE);
-        if (!isSimCardReady(tm)) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(ctx);
-            alert.setTitle(ctx.getResources().getString(R.string.tethering_no_sim_alert_title));
-            alert.setMessage(ctx.getResources().getString(R.string.tethering_no_sim_card_text));
-            alert.setPositiveButton(ctx.getResources().getString(R.string.okay),
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-            alert.show();
-            return true;
-        }
-        return false;
-    }
-
-    private boolean isSimCardReady(
-            TelephonyManager telephonyManager) {
-        return (telephonyManager.getSimState()
-                == TelephonyManager.SIM_STATE_READY);
-    }
-
     @Override
     public boolean onPreferenceChange(Preference preference, Object value) {
-        boolean enable = (Boolean) value;
-        boolean enableWifiApSettingsExt = getResources().
-                         getBoolean(R.bool.show_wifi_hotspot_settings);
-        if (enable) {
-            if(enableWifiApSettingsExt && showNoSimCardDialog(getPrefContext())) {
-                ((HotspotPreference)preference).setChecked(false);
-                return false;
-            } else if(enableWifiApSettingsExt && isNeedShowHelp(getPrefContext())) {
-                Intent intent = new Intent();
-                intent.setAction(ACTION_HOTSPOT_PRE_CONFIGURE);
-                intent.setPackage("com.qualcomm.qti.extsettings");
-                getPrefContext().startActivity(intent);
-                ((HotspotPreference)preference).setChecked(false);
-                return false;
-            } else if(checkWifiConnectivityState(getActivity())) {
-                showTurnOffWifiDialog(getActivity());
+        if (preference == mEnableWifiAp) {
+            boolean enable = (Boolean) value;
+
+            if (enable) {
                 startTethering(TETHERING_WIFI);
             } else {
-                startTethering(TETHERING_WIFI);
+                mCm.stopTethering(TETHERING_WIFI);
             }
-        } else {
-            mCm.stopTethering(TETHERING_WIFI);
+            return false;
+        } else if (preference == mHotspotInactivityTimeout) {
+            if (mWifiConfig != null) {
+                mWifiConfig.wifiApInactivityTimeout = Long.parseLong((String) value);
+                updateHotspotTimeoutSummary(mWifiConfig);
+                if (mWifiManager.getWifiApState() == WifiManager.WIFI_AP_STATE_ENABLED) {
+                    mWifiManager.setWifiApEnabled(null, false);
+                    mWifiManager.setWifiApEnabled(mWifiConfig, true);
+                } else {
+                    mWifiManager.setWifiApConfiguration(mWifiConfig);
+                }
+                return true;
+            }
         }
         return false;
-    }
-
-    private boolean checkWifiConnectivityState(Context ctx) {
-        if(mCm == null) {
-            ConnectivityManager mCm = (ConnectivityManager) ctx.
-                    getSystemService(Context.CONNECTIVITY_SERVICE);
-        }
-        NetworkInfo info = mCm == null ? null : mCm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        return (info != null && info.isConnected());
-    }
-
-    private void showTurnOffWifiDialog(final Context ctx) {
-        LayoutInflater inflater = (LayoutInflater)ctx.getSystemService(
-                Context.LAYOUT_INFLATER_SERVICE);
-        View showAgainView = inflater.inflate(R.layout.not_show_again, null);
-        CheckBox notShowAgainCheckbox = (CheckBox)showAgainView.findViewById(R.id.check);
-        final SharedPreferences sharedpreferences = ctx.getSharedPreferences(
-                SHAREPREFERENCE_FIFE_NAME, Context.MODE_PRIVATE);
-        boolean showAgain = sharedpreferences.getBoolean(KEY_TURN_OFF_WIFI_SHOW_AGAIN, true);
-        if (!showAgain) {
-            return;
-        } else {
-            AlertDialog.Builder alert = new AlertDialog.Builder(ctx)
-                    .setTitle(ctx.getResources().getString(R.string.turn_off_wifi_dialog_title))
-                    .setMessage(ctx.getResources().getString(R.string.turn_off_wifi_dialog_text))
-                    .setView(showAgainView)
-                    .setPositiveButton(ctx.getResources().
-                        getString(R.string.okay), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Editor editor = sharedpreferences.edit();
-                    editor.putBoolean(KEY_TURN_OFF_WIFI_SHOW_AGAIN,
-                            !notShowAgainCheckbox.isChecked());
-                    editor.commit();
-                }
-            });
-            alert.setCancelable(false);
-            alert.show();
-        }
     }
 
     public static boolean isProvisioningNeededButUnavailable(Context context) {
@@ -749,18 +680,6 @@ public class TetherSettings extends RestrictedSettingsFragment
     @Override
     public int getHelpResource() {
         return R.string.help_url_tether;
-    }
-
-    private boolean isNeedShowHelp(final Context ctx) {
-        SharedPreferences sharedPreferences = ctx.getSharedPreferences(
-                SHAREPREFERENCE_FIFE_NAME, Activity.MODE_PRIVATE);
-        Editor editor = sharedPreferences.edit();
-        boolean isFirstUse = sharedPreferences.getBoolean(KEY_FIRST_LAUNCH_HOTSPOT, true);
-        if (isFirstUse) {
-            editor.putBoolean(KEY_FIRST_LAUNCH_HOTSPOT, false);
-            editor.commit();
-        }
-        return isFirstUse;
     }
 
     private void checkDefaultValue(Context ctx) {

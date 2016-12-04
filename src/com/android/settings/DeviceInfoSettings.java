@@ -17,6 +17,8 @@
 package com.android.settings;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -44,6 +46,8 @@ import com.android.settings.search.Indexable;
 import com.android.settingslib.DeviceInfoUtils;
 import com.android.settingslib.RestrictedLockUtils;
 
+import cyanogenmod.hardware.CMHardwareManager;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -62,6 +66,7 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
     private static final String KEY_KERNEL_VERSION = "kernel_version";
     private static final String KEY_BUILD_NUMBER = "build_number";
     private static final String KEY_DEVICE_MODEL = "device_model";
+    private static final String KEY_DEVICE_NAME = "device_name";
     private static final String KEY_SELINUX_STATUS = "selinux_status";
     private static final String KEY_BASEBAND_VERSION = "baseband_version";
     private static final String KEY_FIRMWARE_VERSION = "firmware_version";
@@ -73,15 +78,21 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
     private static final String KEY_SAFETY_LEGAL = "safetylegal";
     private static final String KEY_MBN_VERSION = "mbn_version";
     private static final String PROPERTY_MBN_VERSION = "persist.mbn.version";
-    private static final String KEY_HEXAGON_VERSION = "hexagon_version";
+    private static final String KEY_MOD_VERSION = "mod_version";
+    private static final String KEY_DEVICE_MAINTAINER = "device_maintainer";
     private static final String KEY_MOD_BUILD_DATE = "build_date";
-    private static final String KEY_MOD_API_LEVEL = "mod_api_level";
+    private static final String KEY_QGP_VERSION = "qgp_version";
+    private static final String PROPERTY_QGP_VERSION = "persist.qgp.version";
+    private static final String KEY_VENDOR_VERSION = "vendor_version";
 
     static final int TAPS_TO_BE_A_DEVELOPER = 7;
+    static final int TAPS_TO_SHOW_DEVICEID = 7;
 
     long[] mHits = new long[3];
     int mDevHitCountdown;
+    int mDevIdCountdown;
     Toast mDevHitToast;
+    Toast mDevIdToast;
 
     private UserManager mUm;
 
@@ -116,24 +127,34 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
         } else {
             getPreferenceScreen().removePreference(findPreference(KEY_SECURITY_PATCH));
         }
-
+        String vendorfingerprint = SystemProperties.get("ro.vendor.build.fingerprint");
+        if (vendorfingerprint != null && !TextUtils.isEmpty(vendorfingerprint)) {
+            String[] splitfingerprint = vendorfingerprint.split("/");
+            String vendorid = splitfingerprint[3];
+            setStringSummary(KEY_VENDOR_VERSION, vendorid);
+        } else {
+            getPreferenceScreen().removePreference(findPreference(KEY_VENDOR_VERSION));
+        }
         setValueSummary(KEY_BASEBAND_VERSION, "gsm.version.baseband");
-        setStringSummary(KEY_DEVICE_MODEL, Build.MODEL + DeviceInfoUtils.getMsvSuffix());
         setValueSummary(KEY_EQUIPMENT_ID, PROPERTY_EQUIPMENT_ID);
         setStringSummary(KEY_DEVICE_MODEL, Build.MODEL);
         setStringSummary(KEY_BUILD_NUMBER, Build.DISPLAY);
         findPreference(KEY_BUILD_NUMBER).setEnabled(true);
-        findPreference(KEY_KERNEL_VERSION).setSummary(DeviceInfoUtils.customizeFormatKernelVersion(
+        setValueSummary(KEY_QGP_VERSION, PROPERTY_QGP_VERSION);
+        // Remove QGP Version if property is not present
+        removePreferenceIfPropertyMissing(getPreferenceScreen(), KEY_QGP_VERSION,
+                PROPERTY_QGP_VERSION);
+        final Preference kernelPref = findPreference(KEY_KERNEL_VERSION);
+        kernelPref.setEnabled(true);
+        kernelPref.setSummary(DeviceInfoUtils.customizeFormatKernelVersion(
                 getResources().getBoolean(R.bool.def_hide_kernel_version_name)));
         setValueSummary(KEY_MBN_VERSION, PROPERTY_MBN_VERSION);
         removePreferenceIfPropertyMissing(getPreferenceScreen(), KEY_MBN_VERSION,
                 PROPERTY_MBN_VERSION);
-  //      findPreference(KEY_HEXAGON_VERSION).setSummary(
-    //            cyanogenmod.os.Build.CYANOGENMOD_DISPLAY_VERSION);
-        findPreference(KEY_HEXAGON_VERSION).setEnabled(true);
+        setValueSummary(KEY_MOD_VERSION, "ro.aicp.version");
+        findPreference(KEY_MOD_VERSION).setEnabled(true);
         setValueSummary(KEY_MOD_BUILD_DATE, "ro.build.date");
-        setExplicitValueSummary(KEY_MOD_API_LEVEL, constructApiLevelString());
-        findPreference(KEY_MOD_API_LEVEL).setEnabled(true);
+        setMaintainerSummary(KEY_DEVICE_MAINTAINER, "ro.aicp.maintainer");
 
         if (!SELinux.isSELinuxEnabled()) {
             String status = getResources().getString(R.string.selinux_status_disabled);
@@ -142,6 +163,9 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
             String status = getResources().getString(R.string.selinux_status_permissive);
             setStringSummary(KEY_SELINUX_STATUS, status);
         }
+
+        setStringSummary(KEY_DEVICE_NAME, Build.PRODUCT);
+        removePreferenceIfBoolFalse(KEY_DEVICE_NAME, R.bool.config_displayDeviceName);
 
         // Remove selinux information if property is not present
         removePreferenceIfPropertyMissing(getPreferenceScreen(), KEY_SELINUX_STATUS,
@@ -183,12 +207,6 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
             removePreference(KEY_SYSTEM_UPDATE_SETTINGS);
         }
 
-        boolean isRJILlayout = getResources().getBoolean(R.bool.config_settings_rjil_layout);
-
-        if(isRJILlayout){
-            removePreference(KEY_SYSTEM_UPDATE_SETTINGS);
-        }
-
         // Read platform settings for additional system update setting
         removePreferenceIfBoolFalse(KEY_UPDATE_SETTING,
                 R.bool.config_additional_system_update_setting_enable);
@@ -196,15 +214,12 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
         // Remove manual entry if none present.
         removePreferenceIfBoolFalse(KEY_MANUAL, R.bool.config_show_manual);
 
-        // Remove regulatory information if none present or config_show_regulatory_info is disabled
-        final Intent intent = new Intent(Settings.ACTION_SHOW_REGULATORY_INFO);
-        if (getPackageManager().queryIntentActivities(intent, 0).isEmpty()
-                || !getResources().getBoolean(R.bool.config_show_regulatory_info)) {
-            Preference pref = findPreference(KEY_REGULATORY_INFO);
-            if (pref != null) {
-                getPreferenceScreen().removePreference(pref);
-            }
-        }
+        // Remove regulatory labels if no activity present to handle intent.
+        removePreferenceIfActivityMissing(
+                KEY_REGULATORY_INFO, Settings.ACTION_SHOW_REGULATORY_INFO);
+
+        removePreferenceIfActivityMissing(
+                "safety_info", "android.settings.SHOW_SAFETY_AND_REGULATORY_INFO");
     }
 
     @Override
@@ -214,6 +229,8 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
                 Context.MODE_PRIVATE).getBoolean(DevelopmentSettings.PREF_SHOW,
                         android.os.Build.TYPE.equals("eng")) ? -1 : TAPS_TO_BE_A_DEVELOPER;
         mDevHitToast = null;
+        mDevIdCountdown = TAPS_TO_SHOW_DEVICEID;
+        mDevIdToast = null;
         mFunDisallowedAdmin = RestrictedLockUtils.checkIfRestrictionEnforced(
                 getActivity(), UserManager.DISALLOW_FUN, UserHandle.myUserId());
         mFunDisallowedBySystem = RestrictedLockUtils.hasBaseUserRestriction(
@@ -247,6 +264,41 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
                 } catch (Exception e) {
                     Log.e(LOG_TAG, "Unable to start activity " + intent.toString());
                 }
+            }
+        } else if (preference.getKey().equals(KEY_KERNEL_VERSION)) {
+
+            mDevIdCountdown --;
+            if (mDevIdCountdown == 0) {
+                final CMHardwareManager hwMgr = CMHardwareManager.getInstance(getActivity().getApplicationContext());
+                final String deviceID = hwMgr.getUniqueDeviceId();
+                CharSequence msg;
+                if (deviceID == null) {
+                    msg = getText(R.string.show_device_id_failed_cm);
+                }
+                else {
+                    final ClipboardManager clipboardMgr = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    clipboardMgr.setPrimaryClip(ClipData.newPlainText(getResources().
+                                    getString(R.string.show_device_id_clipboard_label),
+                            deviceID));
+                    msg = getResources().getString(
+                            R.string.show_device_id_copied_cm, deviceID);
+                }
+
+                mDevIdToast = Toast.makeText(getActivity(), msg,
+                        Toast.LENGTH_LONG);
+                mDevIdToast.show();
+                mDevIdCountdown = TAPS_TO_SHOW_DEVICEID;
+            }
+            else if (mDevIdCountdown > 0
+                    && mDevIdCountdown < (TAPS_TO_SHOW_DEVICEID-2)) {
+
+                if (mDevIdToast != null) {
+                    mDevIdToast.cancel();
+                }
+                mDevIdToast = Toast.makeText(getActivity(), getResources().getQuantityString(
+                        R.plurals.show_device_id_countdown_cm, mDevIdCountdown, mDevIdCountdown),
+                        Toast.LENGTH_SHORT);
+                mDevIdToast.show();
             }
         } else if (preference.getKey().equals(KEY_BUILD_NUMBER)) {
             // Don't enable developer options for secondary users.
@@ -301,21 +353,34 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
                         Toast.LENGTH_LONG);
                 mDevHitToast.show();
             }
+        } else if (preference.getKey().equals(KEY_MOD_VERSION)) {
+            System.arraycopy(mHits, 1, mHits, 0, mHits.length-1);
+            mHits[mHits.length-1] = SystemClock.uptimeMillis();
+            if (mHits[0] >= (SystemClock.uptimeMillis()-500)) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.setClassName("com.android.settings",
+                        com.android.settings.aicp.PlatLogoActivity.class.getName());
+                try {
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Log.e(LOG_TAG, "Unable to start activity " + intent.toString());
+                }
+            }
         } else if (preference.getKey().equals(KEY_DEVICE_FEEDBACK)) {
             sendFeedback();
         } else if(preference.getKey().equals(KEY_SYSTEM_UPDATE_SETTINGS)) {
             CarrierConfigManager configManager =
                     (CarrierConfigManager) getSystemService(Context.CARRIER_CONFIG_SERVICE);
             PersistableBundle b = configManager.getConfig();
-            if (b.getBoolean(CarrierConfigManager.KEY_CI_ACTION_ON_SYS_UPDATE_BOOL)) {
+            if (b != null && b.getBoolean(CarrierConfigManager.KEY_CI_ACTION_ON_SYS_UPDATE_BOOL)) {
                 ciActionOnSysUpdate(b);
             }
-        } else if (preference.getKey().equals(KEY_HEXAGON_VERSION)) {
+        } else if (preference.getKey().equals(KEY_MOD_VERSION)) {
             System.arraycopy(mHits, 1, mHits, 0, mHits.length-1);
             mHits[mHits.length-1] = SystemClock.uptimeMillis();
             if (mHits[0] >= (SystemClock.uptimeMillis()-500)) {
                 Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.putExtra("is_cm", false);
+                intent.putExtra("is_cm", true);
                 intent.setClassName("android",
                         com.android.internal.app.PlatLogoActivity.class.getName());
                 try {
@@ -363,6 +428,16 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
         }
     }
 
+    private void removePreferenceIfActivityMissing(String preferenceKey, String action) {
+        final Intent intent = new Intent(action);
+        if (getPackageManager().queryIntentActivities(intent, 0).isEmpty()) {
+            Preference pref = findPreference(preferenceKey);
+            if (pref != null) {
+                getPreferenceScreen().removePreference(pref);
+            }
+        }
+    }
+
     private void removePreferenceIfBoolFalse(String preference, int resId) {
         if (!getResources().getBoolean(resId)) {
             Preference pref = findPreference(preference);
@@ -399,6 +474,20 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
         }
     }
 
+    private void setMaintainerSummary(String preference, String property) {
+        try {
+            String maintainers = SystemProperties.get(property,
+                    getResources().getString(R.string.device_info_default));
+            findPreference(preference).setSummary(maintainers);
+            if (maintainers.contains(",")) {
+                findPreference(preference).setTitle(
+                        getResources().getString(R.string.device_maintainers));
+            }
+        } catch (RuntimeException e) {
+            // No recovery
+        }
+    }
+
     private void sendFeedback() {
         String reporterPackage = DeviceInfoUtils.getFeedbackReporterPackage(getActivity());
         if (TextUtils.isEmpty(reporterPackage)) {
@@ -407,14 +496,6 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
         Intent intent = new Intent(Intent.ACTION_BUG_REPORT);
         intent.setPackage(reporterPackage);
         startActivityForResult(intent, 0);
-    }
-
-    private static String constructApiLevelString() {
-        int sdkInt = cyanogenmod.os.Build.CM_VERSION.SDK_INT;
-        StringBuilder builder = new StringBuilder();
-        builder.append(cyanogenmod.os.Build.getNameForSDKInt(sdkInt))
-                .append(" (" + sdkInt + ")");
-        return builder.toString();
     }
 
     private static class SummaryProvider implements SummaryLoader.SummaryProvider {
@@ -478,15 +559,6 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
                 // Dont show feedback option if there is no reporter.
                 if (TextUtils.isEmpty(DeviceInfoUtils.getFeedbackReporterPackage(context))) {
                     keys.add(KEY_DEVICE_FEEDBACK);
-                }
-                final UserManager um = UserManager.get(context);
-                // TODO: system update needs to be fixed for non-owner user b/22760654
-                if (!um.isAdminUser()) {
-                    keys.add(KEY_SYSTEM_UPDATE_SETTINGS);
-                }
-                if (!context.getResources().getBoolean(
-                        R.bool.config_additional_system_update_setting_enable)) {
-                    keys.add(KEY_UPDATE_SETTING);
                 }
                 return keys;
             }

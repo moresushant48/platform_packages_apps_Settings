@@ -33,10 +33,8 @@ import com.android.internal.logging.MetricsProto.MetricsEvent;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.settings.AppHeader;
 import com.android.settings.R;
-import com.android.settings.applications.LayoutPreference;
 import com.android.settings.notification.NotificationBackend.AppRow;
 import com.android.settingslib.RestrictedSwitchPreference;
-import com.android.settingslib.RestrictedPreference;
 
 
 import java.util.List;
@@ -79,6 +77,8 @@ public class AppNotificationSettings extends NotificationSettingsBase {
                         KEY_VISIBILITY_OVERRIDE);
         mBlock = (RestrictedSwitchPreference) getPreferenceScreen().findPreference(KEY_BLOCK);
         mSilent = (RestrictedSwitchPreference) getPreferenceScreen().findPreference(KEY_SILENT);
+        mSoundTimeout = (RestrictedDropDownPreference)
+                getPreferenceScreen().findPreference(KEY_SOUND_TIMEOUT);
 
         if (mPkgInfo != null) {
             mAppRow = mBackend.loadAppRow(mContext, mPm, mPkgInfo);
@@ -95,6 +95,7 @@ public class AppNotificationSettings extends NotificationSettingsBase {
             setupImportancePrefs(mAppRow.systemApp, mAppRow.appImportance, mAppRow.banned);
             setupPriorityPref(mAppRow.appBypassDnd);
             setupVisOverridePref(mAppRow.appVisOverride);
+            setupSoundTimeoutPref(mAppRow.soundTimeout);
             updateDependents(mAppRow.appImportance);
         }
     }
@@ -110,10 +111,11 @@ public class AppNotificationSettings extends NotificationSettingsBase {
 
         if (getPreferenceScreen().findPreference(mBlock.getKey()) != null) {
             setVisible(mSilent, checkCanBeVisible(Ranking.IMPORTANCE_MIN, importance));
-            mSilent.setChecked(importance == Ranking.IMPORTANCE_LOW);
+            mSilent.setChecked(importance == Ranking.IMPORTANCE_LOW || importance == Ranking.IMPORTANCE_VERY_LOW);
         }
         setVisible(mPriority, checkCanBeVisible(Ranking.IMPORTANCE_DEFAULT, importance)
-                && !mDndVisualEffectsSuppressed);
+                || (checkCanBeVisible(Ranking.IMPORTANCE_LOW, importance)
+                        && mDndVisualEffectsSuppressed));
         setVisible(mVisibilityOverride,
                 checkCanBeVisible(Ranking.IMPORTANCE_MIN, importance) && lockscreenSecure);
     }
@@ -122,6 +124,8 @@ public class AppNotificationSettings extends NotificationSettingsBase {
         if (importance == Ranking.IMPORTANCE_UNSPECIFIED) {
             return true;
         }
+        if (importance == Ranking.IMPORTANCE_VERY_LOW)
+          importance = Ranking.IMPORTANCE_LOW;
         return importance >= minImportanceVisible;
     }
 

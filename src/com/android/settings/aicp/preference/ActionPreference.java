@@ -18,7 +18,7 @@
  * key is identical to the target ConfigMap tag in ActionConstants
  */
 
-package com.android.settings.hexagon.preference;
+package com.android.settings.aicp.preference;
 
 import java.util.Map;
 

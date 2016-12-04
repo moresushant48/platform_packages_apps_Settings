@@ -37,6 +37,7 @@
         <item>@string/app_ops_categories_messaging</item>
         <item>@string/app_ops_categories_media</item>
         <item>@string/app_ops_categories_device</item>
+        <item>@string/app_ops_categories_background</item>
         <item>@string/app_ops_categories_bootup</item>
         <item>@string/app_ops_categories_su</item>
     </string-array>
@@ -194,6 +195,65 @@
         <item>@string/app_ops_permissions_allowed</item>
         <item>@string/app_ops_permissions_ignored</item>
         <item>@string/app_ops_permissions_always_ask</item>
+    </string-array>
+
+    <string-array name="zen_vibration_mode_entries" translatable="false">
+        <item>@string/zen_mode_vibration_never</item>
+        <item>@string/zen_mode_vibration_calls_only</item>
+        <item>@string/zen_mode_vibration_calls_and_notifications</item>
+    </string-array>
+
+    <string-array name="zen_vibration_mode_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <!-- Per-app notification settings: Timeout period in which the app notifications are muted. These are shown in a list dialog. -->
+    <string-array name="app_notification_sound_timeout_entries" translatable="false">
+        <item>@string/app_notification_sound_timeout_value_none</item>
+        <item>@string/app_notification_sound_timeout_value_10_seconds</item>
+        <item>@string/app_notification_sound_timeout_value_30_seconds</item>
+        <item>@string/app_notification_sound_timeout_value_1_minute</item>
+        <item>@string/app_notification_sound_timeout_value_5_minutes</item>
+        <item>@string/app_notification_sound_timeout_value_15_minutes</item>
+        <item>@string/app_notification_sound_timeout_value_30_minutes</item>
+    </string-array>
+
+    <!-- Do not translate. -->
+    <string-array name="app_notification_sound_timeout_values" translatable="false">
+        <item>0</item>
+        <item>10000</item>
+        <item>30000</item>
+        <item>60000</item>
+        <item>300000</item>
+        <item>900000</item>
+        <item>1800000</item>
+    </string-array>
+
+    <!-- Fingerprint sensor locations.  Devices should configure their sensor location using
+         config_fingerprintSensorLocation -->
+    <string-array name="security_settings_fingerprint_sensor_locations" translatable="false">
+        <item>@string/security_settings_fingerprint_sensor_location_back</item>
+        <item>@string/security_settings_fingerprint_sensor_location_front</item>
+        <item>@string/security_settings_fingerprint_sensor_location_left</item>
+        <item>@string/security_settings_fingerprint_sensor_location_right</item>
+    </string-array>
+
+    <!-- Wi-Fi tethering inactivity shut off -->
+    <string-array name="hotstpot_inactivity_timeout_entries" translatable="false">
+        <item>@string/hotstpot_inactivity_timeout_never</item>
+        <item>@string/hotstpot_inactivity_timeout_1_minute</item>
+        <item>@string/hotstpot_inactivity_timeout_5_minutes</item>
+        <item>@string/hotstpot_inactivity_timeout_10_minutes</item>
+    </string-array>
+
+
+    <string-array name="hotstpot_inactivity_timeout_values" translatable="false">
+        <item>0</item>
+        <item>60000</item>
+        <item>300000</item>
+        <item>600000</item>
     </string-array>
 
 </resources>
