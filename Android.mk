@@ -25,7 +25,10 @@ LOCAL_STATIC_JAVA_LIBRARIES := \
 LOCAL_MODULE_TAGS := optional
 
 LOCAL_SRC_FILES := \
-        $(call all-java-files-under, src)
+        $(call all-java-files-under, src) \
+        src/com/android/settings/EventLogTags.logtags
+LOCAL_SRC_FILES += src/org/codeaurora/wfcservice/IWFCService.aidl \
+                   src/org/codeaurora/wfcservice/IWFCServiceCB.aidl
 
 LOCAL_RESOURCE_DIR := $(LOCAL_PATH)/res \
     frameworks/support/v7/preference/res \
