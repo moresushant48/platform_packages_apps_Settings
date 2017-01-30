@@ -92,7 +92,8 @@ public class AppNotificationSettings extends NotificationSettingsBase {
             rows.put(mAppRow.pkg, mAppRow);
             collectConfigActivities(rows);
 
-            setupImportancePrefs(mAppRow.systemApp, mAppRow.appImportance, mAppRow.banned);
+            setupImportancePrefs(mAppRow.cantBlock, mAppRow.cantSilence,
+                    mAppRow.appImportance, mAppRow.banned);
             setupPriorityPref(mAppRow.appBypassDnd);
             setupVisOverridePref(mAppRow.appVisOverride);
             setupSoundTimeoutPref(mAppRow.soundTimeout);
@@ -117,7 +118,7 @@ public class AppNotificationSettings extends NotificationSettingsBase {
                 || (checkCanBeVisible(Ranking.IMPORTANCE_LOW, importance)
                         && mDndVisualEffectsSuppressed));
         setVisible(mVisibilityOverride,
-                checkCanBeVisible(Ranking.IMPORTANCE_MIN, importance) && lockscreenSecure);
+                checkCanBeVisible(Ranking.IMPORTANCE_MIN, importance));
     }
 
     protected boolean checkCanBeVisible(int minImportanceVisible, int importance) {

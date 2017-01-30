@@ -42,7 +42,6 @@ import android.os.Process;
 import android.provider.Settings;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceViewHolder;
-import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.style.TextAppearanceSpan;
 import android.util.Log;
@@ -671,10 +670,10 @@ public class WifiSettings extends RestrictedSettingsFragment
                         }
                         LongPressAccessPointPreference
                                 preference = new LongPressAccessPointPreference(accessPoint,
-                                getPrefContext(), mUserBadgeCache, false, this);
+                                getPrefContext(), mUserBadgeCache, false,
+                                R.drawable.ic_wifi_signal_0, this);
                         preference.setKey(key);
                         preference.setOrder(index++);
-
                         if (mOpenSsid != null && mOpenSsid.equals(accessPoint.getSsidStr())
                                 && !accessPoint.isSaved()
                                 && accessPoint.getSecurity() != AccessPoint.SECURITY_NONE) {
@@ -683,6 +682,7 @@ public class WifiSettings extends RestrictedSettingsFragment
                         }
                         getPreferenceScreen().addPreference(preference);
                         accessPoint.setListener(this);
+                        preference.refresh();
                     }
                 }
                 removeCachedPrefs(getPreferenceScreen());
@@ -776,11 +776,6 @@ public class WifiSettings extends RestrictedSettingsFragment
                 }
             });
         }
-        // Embolden and enlarge the brief description anyway.
-        Spannable boldSpan = (Spannable) emptyTextView.getText();
-        boldSpan.setSpan(
-                new TextAppearanceSpan(getActivity(), android.R.style.TextAppearance_Medium), 0,
-                briefText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         getPreferenceScreen().removeAll();
     }
 

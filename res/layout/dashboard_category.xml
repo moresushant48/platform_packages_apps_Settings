@@ -17,18 +17,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/category"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-
+    android:layout_height="@dimen/dashboard_category_height"
     android:paddingStart="@dimen/dashboard_category_padding_start"
     android:paddingEnd="@dimen/dashboard_category_padding_end"
     android:orientation="vertical"
-    android:background="@color/dashboard_category_background_color"
-    android:layout_marginBottom="@dimen/dashboard_category_margin_bottom"
-    android:importantForAccessibility="noHideDescendants" >
+    android:paddingBottom="8dip"
+    android:background="@color/dashboard_category_background_color">
 
     <TextView android:id="@android:id/title"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dashboard_category_title_height"
+        android:layout_height="match_parent"
         android:paddingStart="@dimen/dashboard_category_title_margin_start"
         android:singleLine="true"
         android:ellipsize="marquee"

@@ -17,9 +17,11 @@ package com.android.settings.dashboard;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -31,6 +33,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.internal.logging.MetricsLogger;
@@ -85,12 +88,17 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
     private Condition mExpandedCondition = null;
     private SuggestionParser mSuggestionParser;
 
+    private int mNumColumns;
+
     public DashboardAdapter(Context context, SuggestionParser parser, Bundle savedInstanceState,
                 List<Condition> conditions) {
         mContext = context;
         mCache = new IconCache(context);
         mSuggestionParser = parser;
         mConditions = conditions;
+
+        final Resources res = context.getResources();
+        mNumColumns = res.getInteger(R.integer.dashboard_num_columns);
 
         setHasStableIds(true);
 
@@ -106,18 +114,28 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
     }
 
     public List<Tile> getSuggestions() {
-        return mSuggestions;
+        if ((Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.DISABLE_SUGGESTIONS, 0) == 1)) {
+             return null;
+        } else {
+             return mSuggestions;
+        }
     }
 
     public void setCategoriesAndSuggestions(List<DashboardCategory> categories,
             List<Tile> suggestions) {
-        mSuggestions = suggestions;
         mCategories = categories;
+        if ((Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.DISABLE_SUGGESTIONS, 0) == 1)) {
+             mSuggestions = null;
+        } else {
+             mSuggestions = suggestions;
+        }
 
-        // TODO: Better place for tinting?
-        TypedValue tintColor = new TypedValue();
-        mContext.getTheme().resolveAttribute(com.android.internal.R.attr.colorAccent,
-                tintColor, true);
+        TypedValue tintColorValue = new TypedValue();
+        mContext.getResources().getValue(R.color.external_tile_icon_tint_color,
+                tintColorValue, true);
+
         for (int i = 0; i < categories.size(); i++) {
             for (int j = 0; j < categories.get(i).tiles.size(); j++) {
                 Tile tile = categories.get(i).tiles.get(j);
@@ -126,7 +144,11 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
                         tile.intent.getComponent().getPackageName())) {
                     // If this drawable is coming from outside Settings, tint it to match the
                     // color.
-                    tile.icon.setTint(tintColor.data);
+                    if (tintColorValue.type == TypedValue.TYPE_ATTRIBUTE) {
+                        mContext.getTheme().resolveAttribute(tintColorValue.data,
+                                tintColorValue, true);
+                    }
+                    tile.icon.setTint(tintColorValue.data);
                 }
             }
         }
@@ -301,11 +323,22 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
     }
 
     private void onBindSuggestionHeader(final DashboardItemHolder holder) {
-        holder.icon.setImageResource(hasMoreSuggestions() ? R.drawable.ic_expand_more
-                : R.drawable.ic_expand_less);
-        holder.title.setText(mContext.getString(R.string.suggestions_title, mSuggestions.size()));
+        final boolean moreSuggestions = hasMoreSuggestions();
         final int undisplayedSuggestionCount =
                 mSuggestions.size() - getDisplayableSuggestionCount();
+        holder.icon.setImageResource(moreSuggestions ? R.drawable.ic_expand_more
+                : R.drawable.ic_expand_less);
+        holder.title.setText(mContext.getString(R.string.suggestions_title, mSuggestions.size()));
+        String summaryContentDescription;
+        if (moreSuggestions) {
+            summaryContentDescription = mContext.getResources().getQuantityString(
+                    R.plurals.settings_suggestion_header_summary_hidden_items,
+                    undisplayedSuggestionCount, undisplayedSuggestionCount);
+        } else {
+            summaryContentDescription = mContext.getString(R.string.condition_expand_hide);
+        }
+        holder.summary.setContentDescription(summaryContentDescription);
+
         if (undisplayedSuggestionCount == 0) {
             holder.summary.setText(null);
         } else {
@@ -331,12 +364,39 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
                 && mSuggestions.size() > DEFAULT_SUGGESTION_COUNT);
     }
 
-    private void onBindTile(DashboardItemHolder holder, Tile tile) {
+    public void onBindTile(DashboardItemHolder holder, Tile tile) {
+        int portraitColumns = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.DASHBOARD_PORTRAIT_COLUMNS, DashboardSummary.mNumColumns);
+
+        int landscapeColumns = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.DASHBOARD_LANDSCAPE_COLUMNS, DashboardSummary.mNumColumns);
         holder.icon.setImageDrawable(mCache.getIcon(tile.icon));
         holder.title.setText(tile.title);
         if (!TextUtils.isEmpty(tile.summary)) {
-            holder.summary.setText(tile.summary);
-            holder.summary.setVisibility(View.VISIBLE);
+           if ((Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.REMOVE_TILE_SUMMARY, 1) == 1)) {
+                holder.summary.setText(tile.summary);
+                holder.summary.setVisibility(View.VISIBLE);
+                if (portraitColumns == 1) {
+                    holder.summary.setSingleLine(true);
+                } else if (portraitColumns == 2) {
+                    holder.summary.setSingleLine(false);
+                } else if (portraitColumns == 3) {
+                    holder.summary.setSingleLine(false);
+                } else if (landscapeColumns == 1) {
+                    holder.summary.setSingleLine(true);
+                } else if (landscapeColumns == 2) {
+                    holder.summary.setSingleLine(false);
+                } else if (landscapeColumns == 3) {
+                    holder.summary.setSingleLine(false);
+                } else if (landscapeColumns == 4) {
+                    holder.summary.setSingleLine(false);
+                } else if (landscapeColumns == 5) {
+                    holder.summary.setSingleLine(false);
+                }
+            } else {
+                holder.summary.setVisibility(View.GONE);
+            }
         } else {
             holder.summary.setVisibility(View.GONE);
         }
@@ -465,5 +525,13 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardAdapter.Dash
             title = (TextView) itemView.findViewById(android.R.id.title);
             summary = (TextView) itemView.findViewById(android.R.id.summary);
         }
+    }
+
+    public boolean isPositionFullSpan(int position) {
+        return mTypes.get(position) != R.layout.dashboard_tile;
+    }
+
+    public void setNumColumns(int numColumns) {
+        mNumColumns = numColumns;
     }
 }

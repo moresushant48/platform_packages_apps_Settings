@@ -36,8 +36,8 @@
   <string name="root_access_adb">Yalnız ADB</string>
   <string name="root_access_all">Tətbiqetmələr və ADB</string>
   <!-- Preference link for root appops -->
-  <!-- About phone screen, AICP version -->
-  <string name="mod_version">AICP versiyası</string>
+  <!-- About phone screen, HEXAGON version -->
+  <string name="mod_version">HEXAGON versiyası</string>
   <string name="mod_version_default">Bilinməyən</string>
   <!-- About phone screen, Device model -->
   <string name="device_model">Cihaz modeli</string>
@@ -155,6 +155,9 @@
   <string name="ok">Oldu</string>
   <!-- Volume settings - Volume adjustment sound -->
   <string name="volume_adjust_sounds_title">Səs artırma tonları</string>
+  <!-- Vibrator intensity -->
+  <string name="vibrator_intensity_title">Titrəmə intensivliyi</string>
+  <string name="vibrator_intensity_dialog_reset">Sıfırla</string>
   <!-- Sizes for pattern lockscreen -->
   <!-- Whether a visible red line will be drawn after the user has drawn the unlock pattern incorrectly -->
   <!-- Whether the dots will be drawn when using the lockscreen pattern -->
@@ -202,6 +205,8 @@
   <!-- Android debugging notification -->
   <!-- Android debugging over network -->
   <string name="adb_over_network_warning">XƏBƏRDARLIQ: Şəbəkə üzərindən ADB fəal olduğu halda, telefonunuz bütün bağlanmış şəbəkələrdə icazəsiz müraciətlərə açıqdır!\n\nBu özəlliyi yalnız etibarlı şəbəkələrə bağlı olduğunuz zaman istifadə edin.\n\nHəqiqətən də bu özəliyi fəallaşdırmaq istəyirsiniz?</string>
+  <!-- Hostname setting -->
+  <string name="device_hostname">Cihaz şəbəkə adı</string>
   <!-- Increasing ring tone volume -->
   <string name="increasing_ring_volume_option_title">Artan zəng səsi</string>
   <string name="increasing_ring_min_volume_title">Başlanğıc səsi</string>
@@ -212,4 +217,10 @@
   <!-- NFC PreferenceCategory title -->
   <!-- Notification importance -->
   <!-- CM Legal -->
+  <!-- Format string for fingerprint location message -->
+  <!-- Fingerprint sensor locations -->
+  <!-- Tethering & portable hotspot other category -->
+  <!-- Wi-Fi tethering inactivity timeout -->
+  <!-- Wake on plug -->
+  <!-- Heads-up -->
 </resources>

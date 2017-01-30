@@ -70,11 +70,10 @@
 
     <ImageView
         android:id="@+id/divider"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="0dip"
+        android:layout_height="0dip"
         android:layout_centerVertical="true"
-        android:contentDescription="@null"
-        android:src="@drawable/nav_divider" />
+        android:contentDescription="@null"/>
 
     <!-- Settings icon -->
 

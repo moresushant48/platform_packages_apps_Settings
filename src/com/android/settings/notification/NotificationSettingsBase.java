@@ -16,6 +16,7 @@
 
 package com.android.settings.notification;
 
+import com.android.internal.widget.LockPatternUtils;
 import com.android.settings.R;
 import com.android.settings.SettingsPreferenceFragment;
 import com.android.settings.applications.AppInfoBase;
@@ -161,13 +162,14 @@ abstract public class NotificationSettingsBase extends SettingsPreferenceFragmen
         }
     }
 
-    protected void setupImportancePrefs(boolean isSystemApp, int importance, boolean banned) {
-        if (mShowSlider) {
+    protected void setupImportancePrefs(boolean notBlockable, boolean notSilenceable,
+                                        int importance, boolean banned) {
+        if (mShowSlider && !notSilenceable) {
             setVisible(mBlock, false);
             setVisible(mSilent, false);
             mImportance.setDisabledByAdmin(mSuspendedAppsAdmin);
             mImportance.setMinimumProgress(
-                    isSystemApp ? Ranking.IMPORTANCE_MIN : Ranking.IMPORTANCE_NONE);
+                    notBlockable ? Ranking.IMPORTANCE_MIN : Ranking.IMPORTANCE_NONE);
             mImportance.setMax(importanceToLevel(Ranking.IMPORTANCE_MAX));
             mImportance.setImportance(importance);
             mImportance.setAutoOn(importance == Ranking.IMPORTANCE_UNSPECIFIED);
@@ -182,7 +184,7 @@ abstract public class NotificationSettingsBase extends SettingsPreferenceFragmen
             });
         } else {
             setVisible(mImportance, false);
-            if (isSystemApp) {
+            if (notBlockable) {
                 setVisible(mBlock, false);
             } else {
                 boolean blocked = importance == Ranking.IMPORTANCE_NONE || banned;
@@ -198,7 +200,11 @@ abstract public class NotificationSettingsBase extends SettingsPreferenceFragmen
                         return true;
                     }
                 });
-
+            }
+            if (notSilenceable) {
+                setVisible(mSilent, false);
+            } else {
+                mSilent.setChecked(importance == Ranking.IMPORTANCE_LOW);
                 mSilent.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                     @Override
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -210,8 +216,8 @@ abstract public class NotificationSettingsBase extends SettingsPreferenceFragmen
                         return true;
                     }
                 });
-                updateDependents(banned ? Ranking.IMPORTANCE_NONE : importance);
             }
+            updateDependents(banned ? Ranking.IMPORTANCE_NONE : importance);
         }
     }
 
@@ -245,10 +251,14 @@ abstract public class NotificationSettingsBase extends SettingsPreferenceFragmen
 
         final String summaryHideEntry = getString(R.string.lock_screen_notifications_summary_hide);
         final String summaryHideEntryValue = Integer.toString(Notification.VISIBILITY_PRIVATE);
-        entries.add(summaryHideEntry);
-        values.add(summaryHideEntryValue);
-        setRestrictedIfNotificationFeaturesDisabled(summaryHideEntry, summaryHideEntryValue,
-                DevicePolicyManager.KEYGUARD_DISABLE_SECURE_NOTIFICATIONS);
+
+       // Hiding of sensitive summaries is only supported on secure lock screens
+        if ((new LockPatternUtils(getActivity())).isSecure(UserHandle.myUserId())) {
+            entries.add(summaryHideEntry);
+            values.add(summaryHideEntryValue);
+            setRestrictedIfNotificationFeaturesDisabled(summaryHideEntry, summaryHideEntryValue,
+                    DevicePolicyManager.KEYGUARD_DISABLE_SECURE_NOTIFICATIONS);
+        }
         entries.add(getString(R.string.lock_screen_notifications_summary_disable));
         values.add(Integer.toString(Notification.VISIBILITY_SECRET));
         mVisibilityOverride.setEntries(entries.toArray(new CharSequence[entries.size()]));

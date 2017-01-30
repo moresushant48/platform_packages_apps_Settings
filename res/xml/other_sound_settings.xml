@@ -15,6 +15,7 @@
 -->
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:lineage="http://schemas.android.com/apk/res/cyanogenmod.platform"
         android:title="@string/other_sound_settings"
         android:key="other_sound_settings"
         xmlns:settings="http://schemas.android.com/apk/res/com.android.settings">
@@ -28,11 +29,6 @@
     <SwitchPreference
             android:key="screen_locking_sounds"
             android:title="@string/screen_locking_sounds_title" />
-
-    <!-- Charging sounds -->
-    <SwitchPreference
-            android:key="charging_sounds"
-            android:title="@string/charging_sounds_title" />
 
     <!-- Docking sounds -->
     <SwitchPreference
@@ -54,6 +50,23 @@
     <SwitchPreference
             android:key="vibrate_on_touch"
             android:title="@string/vibrate_on_touch_title" />
+
+    <!-- Charging sounds -->
+    <SwitchPreference
+            android:key="charging_sounds"
+            android:title="@string/charging_sounds_title" />
+
+    <!-- Custom charging sounds -->
+    <org.cyanogenmod.internal.cmparts.CMPartsPreference
+            android:key="charging_sounds_settings"
+            lineage:replacesKey="charging_sounds" />
+
+    <!-- Vibrator intensity -->
+    <com.android.settings.hardware.VibratorIntensity
+            android:key="vibrator_intensity"
+            android:title="@string/vibrator_intensity_title"
+            android:dialogTitle="@string/vibrator_intensity_title"
+            android:persistent="false" />
 
     <!-- Dock speaker plays -->
     <DropDownPreference

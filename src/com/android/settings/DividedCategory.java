@@ -31,6 +31,6 @@ public class DividedCategory extends PreferenceCategory {
     @Override
     public void onBindViewHolder(PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
-        holder.setDividerAllowedAbove(true);
+        holder.setDividerAllowedAbove(false);
     }
 }

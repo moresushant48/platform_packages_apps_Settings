@@ -24,6 +24,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources ;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -35,6 +36,7 @@ import android.os.storage.StorageEventListener;
 import android.os.storage.StorageManager;
 import android.os.storage.VolumeInfo;
 import android.os.storage.VolumeRecord;
+import android.support.annotation.NonNull;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.text.TextUtils;
@@ -58,6 +60,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static com.android.settingslib.RestrictedLockUtils.EnforcedAdmin;
 
@@ -71,16 +74,22 @@ public class StorageSettings extends SettingsPreferenceFragment implements Index
     private static final String TAG_VOLUME_UNMOUNTED = "volume_unmounted";
     private static final String TAG_DISK_INIT = "disk_init";
 
-    static final int COLOR_PUBLIC = Color.parseColor("#ff9e9e9e");
-    static final int COLOR_WARNING = Color.parseColor("#fff4511e");
+    static int getColorPublic(Resources resources) {
+        return resources.getColor(R.color.storage_public);
+    }
+    static int getColorWarning(Resources resources) {
+        return resources.getColor(R.color.storage_warning);
+    }
 
-    static final int[] COLOR_PRIVATE = new int[] {
-            Color.parseColor("#ff26a69a"),
-            Color.parseColor("#ffab47bc"),
-            Color.parseColor("#fff2a600"),
-            Color.parseColor("#ffec407a"),
-            Color.parseColor("#ffc0ca33"),
-    };
+    static int[] getColorPrivate(Resources resources) {
+        return new int[] {
+                resources.getColor(R.color.storage_private_1),
+                resources.getColor(R.color.storage_private_2),
+                resources.getColor(R.color.storage_private_3),
+                resources.getColor(R.color.storage_private_4),
+                resources.getColor(R.color.storage_private_5),
+        };
+    }
 
     private StorageManager mStorageManager;
 
@@ -163,25 +172,21 @@ public class StorageSettings extends SettingsPreferenceFragment implements Index
         final List<VolumeInfo> volumes = mStorageManager.getVolumes();
         Collections.sort(volumes, VolumeInfo.getDescriptionComparator());
 
+        int[] colorPrivate = getColorPrivate(getResources());
         for (VolumeInfo vol : volumes) {
             if (vol.getType() == VolumeInfo.TYPE_PRIVATE) {
-                final int color = COLOR_PRIVATE[privateCount++ % COLOR_PRIVATE.length];
-                boolean isInternal = VolumeInfo.ID_PRIVATE_INTERNAL.equals(vol.getId());
-                long size = isInternal ? sTotalInternalStorage : vol.getPath().getTotalSpace();
+                final long volumeTotalBytes = getTotalSize(vol);
+                final int color = colorPrivate[privateCount++ % colorPrivate.length];
                 mInternalCategory.addPreference(
-                        new StorageVolumePreference(context, vol, color, size));
+                        new StorageVolumePreference(context, vol, color, volumeTotalBytes));
                 if (vol.isMountedReadable()) {
                     final File path = vol.getPath();
-                    privateUsedBytes += path.getTotalSpace() - path.getFreeSpace();
-                    if (isInternal && sTotalInternalStorage > 0) {
-                        privateTotalBytes += sTotalInternalStorage;
-                    } else {
-                        privateTotalBytes += path.getTotalSpace();
-                    }
+                    privateUsedBytes += (volumeTotalBytes - path.getFreeSpace());
+                    privateTotalBytes += volumeTotalBytes;
                 }
             } else if (vol.getType() == VolumeInfo.TYPE_PUBLIC) {
                 mExternalCategory.addPreference(
-                        new StorageVolumePreference(context, vol, COLOR_PUBLIC, 0));
+                        new StorageVolumePreference(context, vol, getColorPublic(getResources()), 0));
             }
         }
 
@@ -193,7 +198,7 @@ public class StorageSettings extends SettingsPreferenceFragment implements Index
                 // TODO: add actual storage type to record
                 final Drawable icon = context.getDrawable(R.drawable.ic_sim_sd);
                 icon.mutate();
-                icon.setTint(COLOR_PUBLIC);
+                icon.setTint(getColorPublic(getResources()));
 
                 final Preference pref = new Preference(context);
                 pref.setKey(rec.getFsUuid());
@@ -279,7 +284,7 @@ public class StorageSettings extends SettingsPreferenceFragment implements Index
             if (vol.getType() == VolumeInfo.TYPE_PRIVATE) {
                 final Bundle args = new Bundle();
                 args.putString(VolumeInfo.EXTRA_VOLUME_ID, vol.getId());
-                PrivateVolumeSettings.setVolumeSize(args, sTotalInternalStorage);
+                PrivateVolumeSettings.setVolumeSize(args, getTotalSize(vol));
                 startFragment(this, PrivateVolumeSettings.class.getCanonicalName(),
                         -1, 0, args);
                 return true;
@@ -411,18 +416,37 @@ public class StorageSettings extends SettingsPreferenceFragment implements Index
 
             builder.setPositiveButton(R.string.storage_menu_mount,
                     new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                /**
+                 * Check if an {@link RestrictedLockUtils#sendShowAdminSupportDetailsIntent admin
+                 * details intent} should be shown for the restriction and show it.
+                 *
+                 * @param restriction The restriction to check
+                 * @return {@code true} iff a intent was shown.
+                 */
+                private boolean wasAdminSupportIntentShown(@NonNull String restriction) {
                     EnforcedAdmin admin = RestrictedLockUtils.checkIfRestrictionEnforced(
-                            getActivity(), UserManager.DISALLOW_MOUNT_PHYSICAL_MEDIA,
-                            UserHandle.myUserId());
+                            getActivity(), restriction, UserHandle.myUserId());
                     boolean hasBaseUserRestriction = RestrictedLockUtils.hasBaseUserRestriction(
-                            getActivity(), UserManager.DISALLOW_MOUNT_PHYSICAL_MEDIA,
-                            UserHandle.myUserId());
+                            getActivity(), restriction, UserHandle.myUserId());
                     if (admin != null && !hasBaseUserRestriction) {
                         RestrictedLockUtils.sendShowAdminSupportDetailsIntent(getActivity(), admin);
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    if (wasAdminSupportIntentShown(UserManager.DISALLOW_MOUNT_PHYSICAL_MEDIA)) {
                         return;
                     }
+
+                    if (vol.disk != null && vol.disk.isUsb() &&
+                            wasAdminSupportIntentShown(UserManager.DISALLOW_USB_FILE_TRANSFER)) {
+                        return;
+                    }
+
                     new MountTask(context, vol).execute();
                 }
             });
@@ -497,25 +521,38 @@ public class StorageSettings extends SettingsPreferenceFragment implements Index
             long privateFreeBytes = 0;
             long privateTotalBytes = 0;
             for (VolumeInfo info : volumes) {
-                if (info.getType() != VolumeInfo.TYPE_PUBLIC
-                        && info.getType() != VolumeInfo.TYPE_PRIVATE) {
-                    continue;
-                }
                 final File path = info.getPath();
-                if (path == null) {
+                if (info.getType() != VolumeInfo.TYPE_PRIVATE || path == null) {
                     continue;
                 }
-                if (VolumeInfo.ID_PRIVATE_INTERNAL.equals(info.getId()) && sTotalInternalStorage > 0) {
-                    privateTotalBytes += sTotalInternalStorage;
-                } else {
-                    privateTotalBytes += path.getTotalSpace();
-                }
+                privateTotalBytes += getTotalSize(info);
                 privateFreeBytes += path.getFreeSpace();
             }
             long privateUsedBytes = privateTotalBytes - privateFreeBytes;
             mLoader.setSummary(this, mContext.getString(R.string.storage_summary,
                     Formatter.formatFileSize(mContext, privateUsedBytes),
                     Formatter.formatFileSize(mContext, privateTotalBytes)));
+        }
+    }
+
+    private static long getTotalSize(VolumeInfo info) {
+        // Device could have more than one primary storage, which could be located in the
+        // internal flash (UUID_PRIVATE_INTERNAL) or in an external disk.
+        // If it's internal, try to get its total size from StorageManager first
+        // (sTotalInternalStorage), since that size is more precise because it accounts for
+        // the system partition.
+        if (info.getType() == VolumeInfo.TYPE_PRIVATE
+                && Objects.equals(info.getFsUuid(), StorageManager.UUID_PRIVATE_INTERNAL)
+                && sTotalInternalStorage > 0) {
+            return sTotalInternalStorage;
+        } else {
+            final File path = info.getPath();
+            if (path == null) {
+                // Should not happen, caller should have checked.
+                Log.e(TAG, "info's path is null on getTotalSize(): " + info);
+                return 0;
+            }
+            return path.getTotalSpace();
         }
     }
 

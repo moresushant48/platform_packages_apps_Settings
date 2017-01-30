@@ -31,6 +31,8 @@ public class DevelopmentTiles {
     static final Class[] TILE_CLASSES = new Class[] {
             ShowLayout.class,
             GPUProfiling.class,
+            com.android.settings.hex.qstile.DevelopmentTiles.DisableHwOverlays.class,
+            com.android.settings.hex.qstile.DevelopmentTiles.ShowTouches.class,
     };
     public static void setTilesEnabled(Context context, boolean enable) {
         final PackageManager pm = context.getPackageManager();

@@ -257,6 +257,12 @@
             android:title="@string/pointer_location"
             android:summary="@string/pointer_location_summary"/>
 
+        <cyanogenmod.preference.SystemSettingSwitchPreference
+            android:key="edge_service_for_gestures"
+            android:title="@string/edge_gesture_service_title"
+            android:summary="@string/edge_gesture_service_summary"
+            android:defaultValue="1"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory android:key="debug_drawing_category"
@@ -370,16 +376,16 @@
             android:title="@string/strict_mode"
             android:summary="@string/strict_mode_summary"/>
 
-        <SwitchPreference
-            android:key="show_cpu_usage"
-            android:title="@string/show_cpu_usage"
-            android:summary="@string/show_cpu_usage_summary"/>
-
         <ListPreference
             android:key="track_frame_time"
             android:title="@string/track_frame_time"
             android:entries="@array/track_frame_time_entries"
             android:entryValues="@array/track_frame_time_values" />
+
+       <SwitchPreference
+            android:key="show_cpu_info"
+            android:title="@string/show_cpu_info"
+            android:summary="@string/show_cpu_info_summary"/>
 
     </PreferenceCategory>
 
@@ -425,6 +431,24 @@
         <Preference
             android:key="reset_shortcut_manager_throttling"
             android:title="@string/reset_shortcut_manager_throttling" />
+
      </PreferenceCategory>
+
+    <SwitchPreference
+        android:key="kill_app_longpress_back"
+        android:title="@string/kill_app_longpress_back"
+        android:summary="@string/kill_app_longpress_back_summary"/>
+
+    <!-- SELinux -->
+    <Preference
+        android:key="selinux_switch"
+        android:title="@string/selinux_switch_title"
+        android:summary="@string/selinux_switch_summary"
+        android:selectable="false"/>
+
+    <SwitchPreference
+        android:key="selinux"
+        android:title="@string/selinux_title"
+        android:defaultValue="false" />
 
 </PreferenceScreen>

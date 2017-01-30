@@ -224,6 +224,7 @@ public class UserSettings extends SettingsPreferenceFragment
             mMePreference.setSummary(R.string.user_admin);
         }
         mAddUser = (DimmableIconPreference) findPreference(KEY_ADD_USER);
+        mAddUser.useAdminDisabledSummary(false);
         // Determine if add user/profile button should be visible
         if (mUserCaps.mCanAddUser && Utils.isDeviceProvisioned(getActivity())) {
             mAddUser.setOnPreferenceClickListener(this);
@@ -1055,8 +1056,8 @@ public class UserSettings extends SettingsPreferenceFragment
             caps.mIsAdmin = myUserInfo.isAdmin();
             DevicePolicyManager dpm = (DevicePolicyManager) context.getSystemService(
                     Context.DEVICE_POLICY_SERVICE);
-            // No restricted profiles for tablets with a device owner, or phones.
-            if (dpm.isDeviceManaged() || Utils.isVoiceCapable(context)) {
+            // No restricted profiles for devices with a device owner.
+            if (dpm.isDeviceManaged()) {
                 caps.mCanAddRestrictedProfile = false;
             }
             caps.updateAddUserCapabilities(context);

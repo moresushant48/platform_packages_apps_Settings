@@ -24,7 +24,7 @@
         <PreferenceScreen
                 android:key="volume_steps"
                 android:title="@string/volume_steps_title"
-                android:fragment="com.android.settings.hexagon.VolumeSteps" />
+                android:fragment="com.android.settings.hex.VolumeSteps" />
 
         <!-- Media volume -->
         <com.android.settings.notification.VolumeSeekBarPreference
@@ -70,7 +70,6 @@
         <SwitchPreference
                 android:key="vibrate_when_ringing"
                 android:title="@string/vibrate_when_ringing_title" />
-
 
         <!-- Interruptions -->
         <com.android.settingslib.RestrictedPreference

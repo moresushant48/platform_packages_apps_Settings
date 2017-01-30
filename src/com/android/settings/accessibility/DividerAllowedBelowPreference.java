@@ -40,7 +40,7 @@ public class DividerAllowedBelowPreference extends Preference {
     @Override
     public void onBindViewHolder(PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
-        holder.setDividerAllowedBelow(true);
+        holder.setDividerAllowedBelow(false);
     }
 }
 

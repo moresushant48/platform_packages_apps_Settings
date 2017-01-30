@@ -38,8 +38,8 @@
   <!-- Preference link for root appops -->
   <string name="root_appops_title">Bestuur root toegang</string>
   <string name="root_appops_summary">Kyk na en beheer die root reëls</string>
-  <!-- About phone screen, AICP version -->
-  <string name="mod_version">AICP weergawe</string>
+  <!-- About phone screen, HEXAGON version -->
+  <string name="mod_version">HEXAGON weergawe</string>
   <string name="mod_version_default">Onbekend</string>
   <!-- About phone screen, Device model -->
   <string name="device_model">Toestel tipe</string>
@@ -215,6 +215,9 @@
   <string name="ok">OK</string>
   <!-- Volume settings - Volume adjustment sound -->
   <string name="volume_adjust_sounds_title">Volume verander klanke</string>
+  <!-- Vibrator intensity -->
+  <string name="vibrator_intensity_title">Vibrator intensiteit</string>
+  <string name="vibrator_intensity_dialog_reset">Stel terug</string>
   <!-- Sizes for pattern lockscreen -->
   <!-- Whether a visible red line will be drawn after the user has drawn the unlock pattern incorrectly -->
   <string name="lockpattern_settings_enable_error_path_title">Wys patroon fout</string>
@@ -281,6 +284,8 @@
   <string name="adb_over_network">ADB oor netwerk</string>
   <string name="adb_over_network_summary">Aktiveer TCP/IP\u2011ontfouting oor die netwerk koppelvlakke (Wi\u2011Fi, USB netwerke). Hierdie instelling word terug gestel tydens herlaai</string>
   <string name="adb_over_network_warning">WAARSKUWING: Wanneer ADB oor netwerk aangeskakel is, is die toestel kwesbaar vir indringers op alle verbonde netwerke, insluitend die GSM data netwerk\n\nGebruik Slegs hierdie funksie wanneer vertroude netwerke verbind is\n\nWil jy dit aanskakel?</string>
+  <!-- Hostname setting -->
+  <string name="device_hostname">Toestel gasheernaam</string>
   <!-- Increasing ring tone volume -->
   <string name="increasing_ring_volume_option_title">Toenemende luitoon volume</string>
   <string name="increasing_ring_min_volume_title">Begin volume</string>
@@ -298,4 +303,22 @@
   <!-- Notification importance -->
   <!-- CM Legal -->
   <string name="cmlicense_title">CyanogenMod Regs</string>
+  <!-- Format string for fingerprint location message -->
+  <string name="security_settings_fingerprint_enroll_find_sensor_message_cm">Vind die vingerafdruk sensor op die <xliff:g id="sensor_location">%1$s </xliff:g> van jou foon.</string>
+  <!-- Fingerprint sensor locations -->
+  <string name="security_settings_fingerprint_sensor_location_back">terug</string>
+  <string name="security_settings_fingerprint_sensor_location_front">voorkant</string>
+  <string name="security_settings_fingerprint_sensor_location_left">linkerkant</string>
+  <string name="security_settings_fingerprint_sensor_location_right">regte kant</string>
+  <!-- Tethering & portable hotspot other category -->
+  <string name="tethering_other_category_text">Ander</string>
+  <!-- Wi-Fi tethering inactivity timeout -->
+  <string name="hotstpot_inactivity_timeout_text">Wi\u2011Fi warmkol tydverstreke</string>
+  <string name="hotstpot_inactivity_timeout_never">Nooit</string>
+  <string name="hotstpot_inactivity_timeout_1_minute">1 minuut</string>
+  <string name="hotstpot_inactivity_timeout_5_minutes">5 minute</string>
+  <string name="hotstpot_inactivity_timeout_10_minutes">10 minute</string>
+  <!-- Wake on plug -->
+  <string name="wake_when_plugged_or_unplugged_title">Word wakker op in/uit prop</string>
+  <!-- Heads-up -->
 </resources>

@@ -78,8 +78,7 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
     private static final String KEY_SAFETY_LEGAL = "safetylegal";
     private static final String KEY_MBN_VERSION = "mbn_version";
     private static final String PROPERTY_MBN_VERSION = "persist.mbn.version";
-    private static final String KEY_MOD_VERSION = "mod_version";
-    private static final String KEY_DEVICE_MAINTAINER = "device_maintainer";
+    private static final String KEY_HEXAGON_VERSION = "hexagon_version";
     private static final String KEY_MOD_BUILD_DATE = "build_date";
     private static final String KEY_QGP_VERSION = "qgp_version";
     private static final String PROPERTY_QGP_VERSION = "persist.qgp.version";
@@ -151,10 +150,9 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
         setValueSummary(KEY_MBN_VERSION, PROPERTY_MBN_VERSION);
         removePreferenceIfPropertyMissing(getPreferenceScreen(), KEY_MBN_VERSION,
                 PROPERTY_MBN_VERSION);
-        setValueSummary(KEY_MOD_VERSION, "ro.aicp.version");
-        findPreference(KEY_MOD_VERSION).setEnabled(true);
+        findPreference(KEY_HEXAGON_VERSION).setEnabled(true);
+        findPreference(KEY_HEXAGON_VERSION).setEnabled(true);
         setValueSummary(KEY_MOD_BUILD_DATE, "ro.build.date");
-        setMaintainerSummary(KEY_DEVICE_MAINTAINER, "ro.aicp.maintainer");
 
         if (!SELinux.isSELinuxEnabled()) {
             String status = getResources().getString(R.string.selinux_status_disabled);
@@ -353,13 +351,22 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
                         Toast.LENGTH_LONG);
                 mDevHitToast.show();
             }
-        } else if (preference.getKey().equals(KEY_MOD_VERSION)) {
+        } else if (preference.getKey().equals(KEY_HEXAGON_VERSION)) {
             System.arraycopy(mHits, 1, mHits, 0, mHits.length-1);
             mHits[mHits.length-1] = SystemClock.uptimeMillis();
             if (mHits[0] >= (SystemClock.uptimeMillis()-500)) {
+                if (mUm.hasUserRestriction(UserManager.DISALLOW_FUN)) {
+                    if (mFunDisallowedAdmin != null && !mFunDisallowedBySystem) {
+                        RestrictedLockUtils.sendShowAdminSupportDetailsIntent(getActivity(),
+                                mFunDisallowedAdmin);
+                    }
+                    Log.d(LOG_TAG, "Sorry, no fun for you!");
+                    return false;
+                }
+
                 Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.setClassName("com.android.settings",
-                        com.android.settings.aicp.PlatLogoActivity.class.getName());
+                intent.setClassName("android",
+                        com.android.internal.app.PlatLogoActivity.class.getName());
                 try {
                     startActivity(intent);
                 } catch (Exception e) {
@@ -375,7 +382,7 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
             if (b != null && b.getBoolean(CarrierConfigManager.KEY_CI_ACTION_ON_SYS_UPDATE_BOOL)) {
                 ciActionOnSysUpdate(b);
             }
-        } else if (preference.getKey().equals(KEY_MOD_VERSION)) {
+        } else if (preference.getKey().equals(KEY_HEXAGON_VERSION)) {
             System.arraycopy(mHits, 1, mHits, 0, mHits.length-1);
             mHits[mHits.length-1] = SystemClock.uptimeMillis();
             if (mHits[0] >= (SystemClock.uptimeMillis()-500)) {
@@ -469,20 +476,6 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
     private void setExplicitValueSummary(String preference, String value) {
         try {
             findPreference(preference).setSummary(value);
-        } catch (RuntimeException e) {
-            // No recovery
-        }
-    }
-
-    private void setMaintainerSummary(String preference, String property) {
-        try {
-            String maintainers = SystemProperties.get(property,
-                    getResources().getString(R.string.device_info_default));
-            findPreference(preference).setSummary(maintainers);
-            if (maintainers.contains(",")) {
-                findPreference(preference).setTitle(
-                        getResources().getString(R.string.device_maintainers));
-            }
         } catch (RuntimeException e) {
             // No recovery
         }

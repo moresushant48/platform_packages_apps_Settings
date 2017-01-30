@@ -133,10 +133,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Settings$AicpExtras"
-            android:label="@string/header_category">
+        <activity android:name=".Settings$HexagonRom"
+            android:label="@string/header_category_hexagonrom">
             <intent-filter android:priority="4">
-                <action android:name="com.android.settings.category.aicpextras" />
+                <action android:name="com.android.settings.category.hexagonrom" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -965,11 +965,11 @@
         </activity>
 
         <activity android:name="Settings$AEStartActivityActivity"
-            android:label="@string/hexagonrom_settings"
-            android:icon="@drawable/ic_settings_hexagon"
+            android:label="@string/hex_settings"
+            android:icon="@drawable/ic_settings_hex"
             android:taskAffinity="">
             <intent-filter android:priority="1">
-                <action android:name="com.android.settings.hexagon.AEStartActivity" />
+                <action android:name="com.android.settings.hex.AEStartActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
@@ -982,9 +982,9 @@
                 <action android:name="com.android.settings.action.SETTINGS" />
             </intent-filter>
             <meta-data android:name="com.android.settings.category"
-                android:value="com.android.settings.category.aicpextras" />
+                android:value="com.android.settings.category.hexagonrom" />
             <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
-                android:value="com.android.settings.hexagon.AEStartActivity" />
+                android:value="com.android.settings.hex.AEStartActivity" />
             <meta-data android:name="com.android.settings.PRIMARY_PROFILE_CONTROLLED"
                 android:value="true" />
         </activity>
@@ -1026,6 +1026,7 @@
 
         <activity android:name="Settings$NightDisplaySettingsActivity"
                 android:label="@string/night_display_title"
+                android:enabled="@*android:bool/config_nightDisplayAvailable"
                 android:icon="@drawable/ic_settings_night_display"
                 android:taskAffinity="">
             <intent-filter android:priority="1">
@@ -1071,7 +1072,6 @@
                 android:value="true" />
         </activity>
 
-
         <activity android:name="SettingsLicenseActivity"
                 android:label="@string/settings_license_activity_title"
                 android:theme="@android:style/Theme.DeviceDefault.Light.Panel"
@@ -1108,6 +1108,20 @@
                 android:value="com.android.settings.applications.ManageApplications" />
             <meta-data android:name="com.android.settings.PRIMARY_PROFILE_CONTROLLED"
                 android:value="true" />
+        </activity>
+
+        <activity android:name="Settings$ManageDomainUrlsActivity"
+                  android:taskAffinity="com.android.settings"
+                  android:label="@string/domain_urls_title"
+                  android:icon="@drawable/ic_settings_memory">
+            <intent-filter>
+                <action android:name="android.settings.MANAGE_DOMAIN_URLS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data android:name="com.android.settings.category"
+                       android:value="com.android.settings.category.device" />
+            <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
+                       android:value="com.android.settings.applications.ManageDomainUrls" />
         </activity>
 
         <activity android:name="Settings$MemorySettingsActivity"
@@ -1179,7 +1193,7 @@
         <activity android:name=".fuelgauge.RequestIgnoreBatteryOptimizations"
                 android:label="@string/high_power_apps"
                 android:taskAffinity=""
-                android:theme="@*android:style/Theme.Material.Light.Dialog.Alert">
+                android:theme="@*android:style/Theme.DeviceDefault.Light.Dialog.Alert">
             <intent-filter android:priority="1">
                 <action android:name="android.settings.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -1690,6 +1704,7 @@
             android:exported="true"
             android:taskAffinity="com.android.wizard"
             android:theme="@style/SuwThemeGlif.Light"
+            android:label="@string/lock_screen_notifications_interstitial_title"
             android:icon="@drawable/ic_suggested_notifications">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -1782,7 +1797,12 @@
         <activity android:name="ChooseLockGeneric"
             android:label="@string/lockpassword_choose_lock_generic_header"
             android:excludeFromRecents="true"
-            android:theme="@style/SetupWizardTheme.Light" >
+            android:exported="false"
+            android:theme="@style/SetupWizardTheme.Light" />
+
+        <activity android:name=".password.SetNewPasswordActivity"
+            android:theme="@android:style/Theme.NoDisplay"
+            android:excludeFromRecents="true" >
             <intent-filter android:priority="1">
                 <action android:name="android.app.action.SET_NEW_PASSWORD" />
                 <action android:name="android.app.action.SET_NEW_PARENT_PROFILE_PASSWORD" />
@@ -1851,6 +1871,15 @@
             android:exported="false"
             android:theme="@style/SetupWizardTheme.Light"
             android:windowSoftInputMode="stateVisible|adjustResize"/>
+
+        <activity android:name="ChooseEncryptionPassword"
+            android:exported="false"
+            android:theme="@style/SetupWizardTheme.Light"
+            android:windowSoftInputMode="stateVisible|adjustResize"/>
+
+        <activity android:name="ReplaceEncryptionPassword"
+            android:exported="false"
+            android:theme="@style/SetupWizardTheme.Light"/>
 
         <activity android:name=".SetupEncryptionInterstitial"
             android:label="@string/encryption_interstitial_header"
@@ -2970,7 +2999,7 @@
             android:icon="@drawable/hex_navbar_icon"
             android:taskAffinity="">
             <intent-filter android:priority="2">
-                <action android:name="com.android.settings.hexagon.NavbarSettings" />
+                <action android:name="com.android.settings.hex.NavbarSettings" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <intent-filter>
@@ -2983,9 +3012,9 @@
                 <action android:name="com.android.settings.action.SETTINGS" />
             </intent-filter>
             <meta-data android:name="com.android.settings.category"
-                android:value="com.android.settings.category.aicpextras" />
+                android:value="com.android.settings.category.hexagonrom" />
             <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
-                android:value="com.android.settings.aicp.NavbarSettings" />
+                android:value="com.android.settings.hex.NavbarSettings" />
             <meta-data android:name="com.android.settings.PRIMARY_PROFILE_CONTROLLED"
                 android:value="true" />
         </activity>
@@ -2999,7 +3028,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
-                android:value="com.android.settings.hexagon.SmartbarSettings" />
+                android:value="com.android.settings.hex.SmartbarSettings" />
         </activity>
 
         <!-- Fling settings activity. -->
@@ -3011,7 +3040,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
-                android:value="com.android.settings.hexagon.FlingSettings" />
+                android:value="com.android.settings.hex.FlingSettings" />
         </activity>
 
         <!-- Pulse settings activity. -->
@@ -3023,11 +3052,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
-                android:value="com.android.settings.hexagon.PulseSettings" />
+                android:value="com.android.settings.hex.PulseSettings" />
         </activity>
 
        <!-- System action picker -->
-        <activity android:name="com.android.settings.hexagon.utils.ActionPickerDialogActivity"
+        <activity android:name="com.android.settings.hex.utils.ActionPickerDialogActivity"
                 android:theme="@*android:style/Theme.Material.Light.Dialog.Alert"
                 android:label="@string/choose_action_title"
                 android:excludeFromRecents="true">
@@ -3037,7 +3066,7 @@
         </activity>
 
        <!-- Icon pack picker -->
-        <activity android:name="com.android.settings.hexagon.utils.IconPickerActivity"
+        <activity android:name="com.android.settings.hex.utils.IconPickerActivity"
                 android:theme="@*android:style/Theme.Material.Light.Dialog.Alert"
                 android:label="@string/icon_pack_picker_dialog_title"
                 android:excludeFromRecents="true">
@@ -3048,7 +3077,7 @@
 
 
         <!-- Icon picker proxy for gallery -->
-        <activity android:name="com.android.settings.hexagon.utils.IconPickerGallery"
+        <activity android:name="com.android.settings.hex.utils.IconPickerGallery"
             android:theme="@*android:style/Theme.Material.Light.Dialog.Alert"
             android:label="@string/icon_pack_picker_dialog_title"
             android:excludeFromRecents="true">
@@ -3058,7 +3087,7 @@
         </activity>
 
        <!-- Icon pack grid -->
-        <activity android:name="com.android.settings.hexagon.utils.IconPackGridActivity"
+        <activity android:name="com.android.settings.hex.utils.IconPackGridActivity"
                 android:excludeFromRecents="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -3204,6 +3233,18 @@
                        android:value="true" />
         </activity>
 
+        <activity android:name="Settings$AutomaticStorageManagerSettingsActivity"
+                  android:exported="@bool/config_storage_manager_settings_enabled"
+                  android:label="@string/automatic_storage_manager_settings"
+                  android:taskAffinity="">
+            <intent-filter android:priority="1">
+                <action android:name="android.settings.STORAGE_MANAGER_SETTINGS" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data android:name="com.android.settings.FRAGMENT_CLASS"
+                       android:value="com.android.settings.deletionhelper.AutomaticStorageManagerSettings" />
+        </activity>
+
         <service
             android:name=".SettingsDumpService"
             android:exported="true"
@@ -3263,6 +3304,26 @@
                 <action android:name="android.service.quicksettings.action.QS_TILE" />
             </intent-filter>
         </service>
+        <service
+                android:name=".hex.qstile.DevelopmentTiles$DisableHwOverlays"
+                android:label="@string/qs_disable_hw_overlays"
+                android:icon="@drawable/tile_disable_overlays"
+                android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+                android:enabled="false">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+        <service
+                android:name=".hex.qstile.DevelopmentTiles$ShowTouches"
+                android:label="@string/qs_show_touches"
+                android:icon="@drawable/tile_show_touches"
+                android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+                android:enabled="false">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
 
         <activity android:name=".HelpTrampoline"
             android:exported="true"
@@ -3276,6 +3337,12 @@
             android:permission="cyanogenmod.permission.PROTECTED_APP">
             <intent-filter>
                 <action android:name="cyanogenmod.intent.action.PACKAGE_PROTECTED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.android.settings.hex.util.OnBoot">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
 
@@ -3294,26 +3361,6 @@
                   android:excludeFromRecents="true">
             <intent-filter>
                 <action android:name=".applications.LockPatternActivity" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
-        <activity android:name=".aicp.PlatLogoActivity"
-                android:theme="@android:style/Theme.Wallpaper.NoTitleBar.Fullscreen"
-                android:process=":ui">
-        </activity>
-
-        <activity
-            android:name=".aicp.Nyandroid"
-            android:exported="true"
-            android:label="Nyandroid"
-            android:icon="@drawable/nyandroid04"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-            android:hardwareAccelerated="true"
-            android:launchMode="singleInstance"
-            android:excludeFromRecents="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

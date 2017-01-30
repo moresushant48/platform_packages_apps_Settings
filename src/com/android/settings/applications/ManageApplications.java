@@ -57,7 +57,6 @@ import com.android.settings.AppHeader;
 import com.android.settings.InstrumentedFragment;
 import com.android.settings.R;
 import com.android.settings.Settings.AllApplicationsActivity;
-import com.android.settings.Settings.DomainsURLsAppListActivity;
 import com.android.settings.Settings.HighPowerApplicationsActivity;
 import com.android.settings.Settings.NotificationAppListActivity;
 import com.android.settings.Settings.OverlaySettingsActivity;
@@ -108,6 +107,8 @@ public class ManageApplications extends InstrumentedFragment
 
     private static final String EXTRA_SORT_ORDER = "sortOrder";
     private static final String EXTRA_SHOW_SYSTEM = "showSystem";
+    private static final String EXTRA_SHOW_SUBSTRATUM = "showSubstratum";
+    private static final String EXTRA_SHOW_SUBSTRATUM_ICONS = "showSubstratumIcons";
     private static final String EXTRA_HAS_ENTRIES = "hasEntries";
     private static final String EXTRA_HAS_BRIDGE = "hasBridge";
 
@@ -136,10 +137,11 @@ public class ManageApplications extends InstrumentedFragment
     public static final int FILTER_APPS_PRIORITY = 9;
     public static final int FILTER_APPS_PERSONAL = 10;
     public static final int FILTER_APPS_WORK = 11;
-    public static final int FILTER_APPS_WITH_DOMAIN_URLS = 12;
     public static final int FILTER_APPS_USAGE_ACCESS = 13;
     public static final int FILTER_APPS_WITH_OVERLAY = 14;
     public static final int FILTER_APPS_WRITE_SETTINGS = 15;
+    public static final int FILTER_APPS_SUBSTRATUM_ICONS = 16;
+    public static final int FILTER_APPS_SUBSTRATUM = 17;
 
     // This is the string labels for the filter modes above, the order must be kept in sync.
     public static final int[] FILTER_LABELS = new int[]{
@@ -189,6 +191,14 @@ public class ManageApplications extends InstrumentedFragment
     // whether showing system apps.
     private boolean mShowSystem;
 
+    // whether showing substratum overlays.
+    private boolean mShowSubstratum;
+    private boolean mShowSubstratumIcons;
+
+    // if app and icon overlay installed
+    private boolean mAppOverlayInstalled;
+    private boolean mIconOverlayInstalled;
+
     private ApplicationsState mApplicationsState;
 
     public int mListType;
@@ -217,7 +227,6 @@ public class ManageApplications extends InstrumentedFragment
 
     public static final int LIST_TYPE_MAIN = 0;
     public static final int LIST_TYPE_NOTIFICATION = 1;
-    public static final int LIST_TYPE_DOMAINS_URLS = 2;
     public static final int LIST_TYPE_STORAGE = 3;
     public static final int LIST_TYPE_USAGE_ACCESS = 4;
     public static final int LIST_TYPE_HIGH_POWER = 5;
@@ -251,8 +260,6 @@ public class ManageApplications extends InstrumentedFragment
         } else if (className.equals(NotificationAppListActivity.class.getName())) {
             mListType = LIST_TYPE_NOTIFICATION;
             mNotifBackend = new NotificationBackend();
-        } else if (className.equals(DomainsURLsAppListActivity.class.getName())) {
-            mListType = LIST_TYPE_DOMAINS_URLS;
         } else if (className.equals(StorageUseActivity.class.getName())) {
             if (args != null && args.containsKey(EXTRA_VOLUME_UUID)) {
                 mVolumeUuid = args.getString(EXTRA_VOLUME_UUID);
@@ -281,6 +288,9 @@ public class ManageApplications extends InstrumentedFragment
         if (savedInstanceState != null) {
             mSortOrder = savedInstanceState.getInt(EXTRA_SORT_ORDER, mSortOrder);
             mShowSystem = savedInstanceState.getBoolean(EXTRA_SHOW_SYSTEM, mShowSystem);
+            mShowSubstratum = savedInstanceState.getBoolean(EXTRA_SHOW_SUBSTRATUM, mShowSubstratum);
+            mShowSubstratumIcons = savedInstanceState.getBoolean(EXTRA_SHOW_SUBSTRATUM_ICONS,
+                                                                 mShowSubstratumIcons);
         }
 
         mInvalidSizeStr = getActivity().getText(R.string.invalid_size_value);
@@ -382,8 +392,6 @@ public class ManageApplications extends InstrumentedFragment
 
     private int getDefaultFilter() {
         switch (mListType) {
-            case LIST_TYPE_DOMAINS_URLS:
-                return FILTER_APPS_WITH_DOMAIN_URLS;
             case LIST_TYPE_USAGE_ACCESS:
                 return FILTER_APPS_USAGE_ACCESS;
             case LIST_TYPE_HIGH_POWER:
@@ -415,8 +423,6 @@ public class ManageApplications extends InstrumentedFragment
                 return MetricsEvent.MANAGE_APPLICATIONS;
             case LIST_TYPE_NOTIFICATION:
                 return MetricsEvent.MANAGE_APPLICATIONS_NOTIFICATIONS;
-            case LIST_TYPE_DOMAINS_URLS:
-                return MetricsEvent.MANAGE_DOMAIN_URLS;
             case LIST_TYPE_STORAGE:
                 return MetricsEvent.APPLICATIONS_STORAGE_APPS;
             case LIST_TYPE_USAGE_ACCESS:
@@ -449,6 +455,8 @@ public class ManageApplications extends InstrumentedFragment
         mResetAppsHelper.onSaveInstanceState(outState);
         outState.putInt(EXTRA_SORT_ORDER, mSortOrder);
         outState.putBoolean(EXTRA_SHOW_SYSTEM, mShowSystem);
+        outState.putBoolean(EXTRA_SHOW_SUBSTRATUM, mShowSubstratum);
+        outState.putBoolean(EXTRA_SHOW_SUBSTRATUM_ICONS, mShowSubstratumIcons);
         outState.putBoolean(EXTRA_HAS_ENTRIES, mApplications.mHasReceivedLoadEntries);
         outState.putBoolean(EXTRA_HAS_BRIDGE, mApplications.mHasReceivedBridgeCallback);
     }
@@ -502,9 +510,6 @@ public class ManageApplications extends InstrumentedFragment
                 startAppInfoFragment(AppNotificationSettings.class,
                         R.string.app_notifications_title);
                 break;
-            case LIST_TYPE_DOMAINS_URLS:
-                startAppInfoFragment(AppLaunchSettings.class, R.string.auto_launch_label);
-                break;
             case LIST_TYPE_USAGE_ACCESS:
                 startAppInfoFragment(UsageAccessDetails.class, R.string.usage_access);
                 break;
@@ -537,9 +542,6 @@ public class ManageApplications extends InstrumentedFragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        if (mListType == LIST_TYPE_DOMAINS_URLS) {
-            return;
-        }
         HelpUtils.prepareHelpMenuItem(getActivity(), menu, mListType == LIST_TYPE_MAIN
                 ? R.string.help_uri_apps : R.string.help_uri_notifications, getClass().getName());
         mOptionsMenu = menu;
@@ -558,6 +560,9 @@ public class ManageApplications extends InstrumentedFragment
     }
 
     void updateOptionsMenu() {
+        mAppOverlayInstalled = isOverlayInstalled("app");
+        mIconOverlayInstalled = isOverlayInstalled("icon");
+
         if (mOptionsMenu == null) {
             return;
         }
@@ -573,6 +578,15 @@ public class ManageApplications extends InstrumentedFragment
                 && mListType != LIST_TYPE_HIGH_POWER);
         mOptionsMenu.findItem(R.id.hide_system).setVisible(mShowSystem
                 && mListType != LIST_TYPE_HIGH_POWER);
+
+        mOptionsMenu.findItem(R.id.show_substratum).setVisible(!mShowSubstratum
+                && mListType != LIST_TYPE_HIGH_POWER && mAppOverlayInstalled);
+        mOptionsMenu.findItem(R.id.hide_substratum).setVisible(mShowSubstratum
+                && mListType != LIST_TYPE_HIGH_POWER && mAppOverlayInstalled);
+        mOptionsMenu.findItem(R.id.show_substratum_icons).setVisible(!mShowSubstratumIcons
+                && mListType != LIST_TYPE_HIGH_POWER && mIconOverlayInstalled);
+        mOptionsMenu.findItem(R.id.hide_substratum_icons).setVisible(mShowSubstratumIcons
+                && mListType != LIST_TYPE_HIGH_POWER && mIconOverlayInstalled);
     }
 
     @Override
@@ -590,6 +604,16 @@ public class ManageApplications extends InstrumentedFragment
             case R.id.show_system:
             case R.id.hide_system:
                 mShowSystem = !mShowSystem;
+                mApplications.rebuild(false);
+                break;
+            case R.id.show_substratum:
+            case R.id.hide_substratum:
+                mShowSubstratum = !mShowSubstratum;
+                mApplications.rebuild(false);
+                break;
+            case R.id.show_substratum_icons:
+            case R.id.hide_substratum_icons:
+                mShowSubstratumIcons = !mShowSubstratumIcons;
                 mApplications.rebuild(false);
                 break;
             case R.id.reset_app_preferences:
@@ -649,6 +673,29 @@ public class ManageApplications extends InstrumentedFragment
         }
         mFilterAdapter.setFilterEnabled(FILTER_APPS_ENABLED, hasDisabledApps);
         mFilterAdapter.setFilterEnabled(FILTER_APPS_DISABLED, hasDisabledApps);
+    }
+
+    boolean isOverlayInstalled(String type) {
+        List<ApplicationInfo> packages = getActivity().getPackageManager()
+                .getInstalledApplications(PackageManager.GET_META_DATA);
+
+        for (ApplicationInfo packageInfo : packages) {
+            if (packageInfo.metaData != null) {
+                if (type.equals("app")) {
+                    if (packageInfo.metaData
+                                    .getString("Substratum_Parent") != null) {
+                        return true;
+                    }
+                }
+                if (type.equals("icon")) {
+                    if (packageInfo.metaData
+                                    .getString("Substratum_IconPack") != null) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     static class FilterSpinnerAdapter extends ArrayAdapter<CharSequence> {
@@ -760,7 +807,7 @@ public class ManageApplications extends InstrumentedFragment
         private boolean mHasReceivedLoadEntries;
         private boolean mHasReceivedBridgeCallback;
 
-        private AlphabeticIndex.ImmutableIndex mIndex;
+        private AlphabeticIndex.ImmutableIndex<Locale> mIndex;
         private SectionInfo[] mSections = EMPTY_SECTIONS;
         private int[] mPositionToSectionIndex;
 
@@ -882,7 +929,15 @@ public class ManageApplications extends InstrumentedFragment
             }
             if (!mManageApplications.mShowSystem) {
                 filterObj = new CompoundFilter(filterObj,
-                        ApplicationsState.FILTER_DOWNLOADED_AND_LAUNCHER);
+                                               ApplicationsState.FILTER_DOWNLOADED_AND_LAUNCHER);
+            }
+            if (!mManageApplications.mShowSubstratum) {
+                filterObj = new CompoundFilter(filterObj,
+                                               ApplicationsState.FILTER_SUBSTRATUM);
+            }
+            if (!mManageApplications.mShowSubstratumIcons) {
+                filterObj = new CompoundFilter(filterObj,
+                                               ApplicationsState.FILTER_SUBSTRATUM_ICONS);
             }
             switch (mLastSortMode) {
                 case R.id.sort_order_size:
@@ -902,6 +957,8 @@ public class ManageApplications extends InstrumentedFragment
                     comparatorObj = ApplicationsState.ALPHA_COMPARATOR;
                     break;
             }
+            filterObj = new CompoundFilter(filterObj, ApplicationsState.FILTER_NOT_HIDE);
+
             AppFilter finalFilterObj = filterObj;
             mBgHandler.post(() -> {
                 final ArrayList<AppEntry> entries = mSession.rebuild(finalFilterObj,
@@ -984,7 +1041,7 @@ public class ManageApplications extends InstrumentedFragment
                     if (locales.size() == 0) {
                         locales = new LocaleList(Locale.ENGLISH);
                     }
-                    AlphabeticIndex index = new AlphabeticIndex<>(locales.get(0));
+                    AlphabeticIndex<Locale> index = new AlphabeticIndex<>(locales.get(0));
                     int localeCount = locales.size();
                     for (int i = 1; i < localeCount; i++) {
                         index.addLabels(locales.get(i));
@@ -1185,10 +1242,6 @@ public class ManageApplications extends InstrumentedFragment
                     }
                     break;
 
-                case LIST_TYPE_DOMAINS_URLS:
-                    holder.summary.setText(getDomainsSummary(holder.entry.info.packageName));
-                    break;
-
                 case LIST_TYPE_USAGE_ACCESS:
                     if (holder.entry.extraInfo != null) {
                         if (!((holder.entry.extraInfo) instanceof PermissionState)) {
@@ -1230,25 +1283,6 @@ public class ManageApplications extends InstrumentedFragment
         @Override
         public void onMovedToScrapHeap(View view) {
             mActive.remove(view);
-        }
-
-        private CharSequence getDomainsSummary(String packageName) {
-            // If the user has explicitly said "no" for this package, that's the
-            // string we should show.
-            int domainStatus = mPm.getIntentVerificationStatusAsUser(packageName, UserHandle.myUserId());
-            if (domainStatus == PackageManager.INTENT_FILTER_DOMAIN_VERIFICATION_STATUS_NEVER) {
-                return mContext.getString(R.string.domain_urls_summary_none);
-            }
-            // Otherwise, ask package manager for the domains for this package,
-            // and show the first one (or none if there aren't any).
-            ArraySet<String> result = Utils.getHandledDomains(mPm, packageName);
-            if (result.size() == 0) {
-                return mContext.getString(R.string.domain_urls_summary_none);
-            } else if (result.size() == 1) {
-                return mContext.getString(R.string.domain_urls_summary_one, result.valueAt(0));
-            } else {
-                return mContext.getString(R.string.domain_urls_summary_some, result.valueAt(0));
-            }
         }
 
         @Override
@@ -1293,6 +1327,12 @@ public class ManageApplications extends InstrumentedFragment
                         if ((info.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
                             return true;
                         } else if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 0) {
+                            if (info.metaData != null) {
+                                if (info.metaData.getString("Substratum_Parent") != null
+                                        || info.metaData.getString("Substratum_IconPack") != null) {
+                                    return false;
+                                }
+                            }
                             return true;
                         }
                         Intent launchIntent = new Intent(Intent.ACTION_MAIN, null)
