@@ -23,4 +23,8 @@
 
     <!-- SuperSU header name - the app hides itself from launcher based on this resource name being present in com.android.settings -->
     <string name="supersu_title">SuperSU</string>
+
+    <!-- Phenex build date-->
+   <string name="build_date">PhenexOS build date</string>
+   <string name="build_date_default">Unknown</string>  
 </resources>
