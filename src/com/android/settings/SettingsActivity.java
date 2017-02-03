@@ -76,6 +76,7 @@ import com.android.settings.applications.ManageDomainUrls;
 import com.android.settings.applications.NotificationApps;
 import com.android.settings.applications.ProcessStatsSummary;
 import com.android.settings.applications.ProcessStatsUi;
+import com.android.settings.applications.RunningServices;
 import com.android.settings.applications.UsageAccessDetails;
 import com.android.settings.applications.VrListenerSettings;
 import com.android.settings.applications.WriteSettingsDetails;
@@ -276,6 +277,7 @@ public class SettingsActivity extends SettingsDrawerActivity
             Settings.PrintSettingsActivity.class.getName(),
             Settings.PaymentSettingsActivity.class.getName(),
             Settings.TimerSwitchSettingsActivity.class.getName(),
+            Settings.DevRunningServicesActivity.class.getName(),
     };
 
     private static final String[] ENTRY_FRAGMENTS = {
@@ -379,7 +381,8 @@ public class SettingsActivity extends SettingsDrawerActivity
             MasterClear.class.getName(),
             NightDisplaySettings.class.getName(),
             ManageDomainUrls.class.getName(),
-            AutomaticStorageManagerSettings.class.getName()
+            AutomaticStorageManagerSettings.class.getName(),
+            RunningServices.class.getName(),
     };
 
 

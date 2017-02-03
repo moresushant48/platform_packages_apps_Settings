@@ -167,4 +167,9 @@ public class Settings extends SettingsActivity {
     public static class FlingSettingsActivity extends SettingsActivity { /* empty */ }
     public static class SmartbarSettingsActivity extends SettingsActivity { /* empty */ }
     public static class PulseSettingsActivity extends SettingsActivity { /* empty */ }
+<<<<<<< HEAD
+=======
+    public static class AmbientSettingsActivity extends SettingsActivity { /* empty */ }
+    public static class DevRunningServicesActivity extends SettingsActivity { /* empty */ }
+>>>>>>> eeedc01... Allow to quickly open Running Services from notification/qs panel [2/2]
 }
