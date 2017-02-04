@@ -388,5 +388,11 @@
     <string name="night_bright_min">Minimum brightness</string>
     <string name="night_bright_low">Low brightness</string>
     <string name="night_bright_medium">Medium brightness</string>
->>>>>>> a74eaf3... Night Light brightness mode options [2/2]:res/values/aicp_strings.xml
+<<<<<<< HEAD:res/values/hex_strings.xml
+>>>>>>> a74eaf3... Night Light brightness mode options [2/2]:res/values/hex_strings.xml
+=======
+    <string name="magisk_title">Magisk Manager</string>
+    <string name="magisk_summary">Root management</string>
+
+>>>>>>> 904cae7... Add Magisk Manager dashboard option:res/values/hex_strings.xml
 </resources>
