@@ -70,6 +70,7 @@ import com.android.settings.hex.SmartbarSettings;
 import com.android.settings.hex.PulseSettings;
 import com.android.settings.applications.AdvancedAppSettings;
 import com.android.settings.applications.DrawOverlayDetails;
+import com.android.settings.applications.ExpandedDesktopPreferenceFragment;
 import com.android.settings.applications.InstalledAppDetails;
 import com.android.settings.applications.ManageApplications;
 import com.android.settings.applications.ManageAssist;
@@ -387,6 +388,7 @@ public class SettingsActivity extends SettingsDrawerActivity
             ManageDomainUrls.class.getName(),
             AutomaticStorageManagerSettings.class.getName(),
             RunningServices.class.getName(),
+            ExpandedDesktopPreferenceFragment.class.getName(),
     };
 
 
