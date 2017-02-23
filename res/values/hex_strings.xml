@@ -186,6 +186,8 @@
     <string name="pulse_custom_fudge_factor">Sanity level</string>
     <string name="lavamp_solid_speed_title">Lava Lamp speed</string>
     <string name="pulse_solid_dimen_category">Solid lines mode settings</string>
+    <string name="fling_lavalamp_color_from">Lava Lamp start color</string>
+    <string name="fling_lavalamp_color_to">Lava Lamp end color</string>
 
     <!-- Pulse config -->
     <string name="pulse_custom_dimen">Bar width</string>
@@ -231,6 +233,10 @@
     <string name="smartbar_config_backup_error_toast">Error saving Smartbar profile</string>
     <string name="smartbar_config_restore_error_toast">Error restoring Smartbar profile</string>
     <string name="navbar_buttons_alpha_title">Button transparency</string>
+    <string name="smartbar_doubletap_sleep_title">Double tap to sleep</string>
+    <string name="smartbar_doubletap_sleep_summary">Double tap on navbar empty areas to switch off the screen</string>
+    <string name="one_handed_mode_title">One handed mode</string>
+    <string name="one_handed_mode_summary">Allows swiping on the navigation bar to enable one handed mode</string>
 
     <string name="link_volume_option_title">Link ringtone &amp; notification volumes</string>
 
@@ -337,8 +343,7 @@
     <string name="dashboard_summary_double_lines_title">Dashboard summary lines</string>
     <string name="dashboard_summary_double_lines_summary_on">Show dashboard tile summaries in more lines</string>
     <string name="dashboard_summary_double_lines_summary_off">Show dashboard tile summaries in 1 line</string>
-<<<<<<< HEAD:res/values/hex_strings.xml
-=======
+
 
     <!-- Doze pulse options -->
     <string name="doze_settings">Doze settings</string>
@@ -388,18 +393,7 @@
     <string name="night_bright_min">Minimum brightness</string>
     <string name="night_bright_low">Low brightness</string>
     <string name="night_bright_medium">Medium brightness</string>
-<<<<<<< HEAD:res/values/hex_strings.xml
-<<<<<<< HEAD:res/values/hex_strings.xml
->>>>>>> a74eaf3... Night Light brightness mode options [2/2]:res/values/hex_strings.xml
-=======
-    <string name="magisk_title">Magisk Manager</string>
-    <string name="magisk_summary">Root management</string>
-
->>>>>>> 904cae7... Add Magisk Manager dashboard option:res/values/hex_strings.xml
-=======
 
     <string name="magisk_title">Magisk Manager</string>
     <string name="magisk_summary">Root management</string>
-
->>>>>>> fd228f1... Merge "Add Magisk Manager dashboard option" into n7.1:res/values/aicp_strings.xml
 </resources>

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:viewportWidth="12.7"
@@ -13,4 +12,3 @@
             android:fillColor="#000000" />
     </group>
 </vector>
->>>>>>> fd228f1... Merge "Add Magisk Manager dashboard option" into n7.1

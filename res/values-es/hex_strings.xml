@@ -298,9 +298,6 @@
    <!-- Kill app long-press back -->
    <string name="kill_app_longpress_back">Botón atrás cierra aplicación</string>
    <string name="kill_app_longpress_back_summary">Pulsación larga sobre el botón atrás cierra la aplicación en primer plano</string>
-
-<<<<<<< HEAD:res/values-es/hex_strings.xml
-=======
    
    <!-- Dashboard options -->
     <string name="dashboard_category">Opciones de la pantalla de ajustes</string>
@@ -367,6 +364,4 @@
     <string name="double_tap_wake_doze_title">Doble toque para despertar en doze</string>
     <string name="double_tap_wake_doze_summary">Requiere un doble toque para despertar el dispositivo cuando doze mantiene la pantalla encendida</string>
 
-
->>>>>>> 9e1e50e... Settings: ambient display and doze spanish translations:res/values-es/aicp_strings.xml
 </resources>
