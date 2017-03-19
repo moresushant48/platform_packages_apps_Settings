@@ -86,8 +86,4 @@
     <color name="text_color_black">@android:color/black</color>
     <color name="text_color_white">@android:color/white</color>
     <color name="background_color_white">@android:color/white</color>
-<<<<<<< HEAD:res/values/hex_colors.xml
-
-=======
->>>>>>> cd8195b... Merge changes from topic 'OMS' into n7.1:res/values/aicp_colors.xml
-</resources>
+ </resources>
