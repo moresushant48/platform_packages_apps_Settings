@@ -27,6 +27,16 @@
 					android:data="http://droidvn.com/forums/" />
     	</PreferenceScreen>
 
+       <!-- Hexagon  Updates -->
+        <PreferenceScreen android:key="cm_updates"
+                android:title="@string/hex_ota"
+                android:summary="@string/system_update_settings_list_item_summary"
+                cm:requiresPackage="com.hexagon.updater">
+            <intent android:action="android.intent.action.MAIN"
+                    android:targetPackage="com.hexagon.updater"
+                    android:targetClass="com.hexagon.updater.UpdatesActivity" />
+        </PreferenceScreen>
+
         <PreferenceScreen
                 android:key="manual"
                 android:title="@string/manual">
