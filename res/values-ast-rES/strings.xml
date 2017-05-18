@@ -66,6 +66,13 @@
   <!-- Phone Info screen. Menu item label.  Used for diagnostic info screens, precise translation isn't needed -->
   <string name="radioInfo_menu_viewSDN">Ver númberos de marcación de serviciu</string>
   <!-- Phone Info screen. Menu item label.  Used for diagnostic info screens, precise translation isn't needed -->
+  <!-- Phone Info screen. IMS Registration Title.  Used for diagnostic info screens, precise translation isn't needed -->
+  <!-- Phone Info screen. IMS Status - Registered.  Used for diagnostic info screens, precise translation isn't needed -->
+  <!-- Phone Info screen. Ims Status - Unregistered.  Used for diagnostic info screens, precise translation isn't needed -->
+  <!-- Phone Info screen. Ims Feature Status label.  Used for diagnostic info screens, precise translation isn't needed -->
+  <!-- Phone Info screen. Ims Feature status label.  Used for diagnostic info screens, precise translation isn't needed -->
+  <string name="radio_info_ims_feature_status_unavailable">Non disponible</string>
+  <!-- Phone Info screen. IMS Registration.  Used for diagnostic info screens, precise translation isn't needed -->
   <!-- Phone Info screen. Status label.  Used for diagnostic info screens, precise translation isn't needed -->
   <!-- Phone Info screen. Status label.  Used for diagnostic info screens, precise translation isn't needed -->
   <!-- Phone Info screen. Status label.  Used for diagnostic info screens, precise translation isn't needed -->
@@ -1096,7 +1103,7 @@
   <!-- Used to describe the off state of the Android Beam feature [CHAR LIMIT=NONE] -->
   <string name="android_beam_off_summary">Non</string>
   <!-- Used to describe the enabled state of the Android Beam feature when NFC, which it relies on, is turned off [CHAR LIMIT=NONE] -->
-  <string name="android_beam_disabled_summary">Non disponible porque la función NFC ta desactivada</string>
+  <string name="android_beam_disabled_summary">Non disponible porque\'l NFC ta desactivao</string>
   <!-- Used in the Android Beam sharing preferences screen. This phrase is a trademark. [CHAR LIMIT=32] -->
   <string name="android_beam_label">Android Beam</string>
   <!-- Explanation of the Android Beam feature in the Android Beam settings panel. The use of "beam" here is as a verb and not considered trademarked. [CHAR LIMIT=NONE] -->
@@ -4447,7 +4454,7 @@
   <!-- Header for a dialog asking the user which payment app to use -->
   <string name="nfc_payment_pay_with">Nuna terminal Tocar y pagar, pagar con:</string>
   <!-- Header for text explaning how to pay at a payment terminal in a store -->
-  <string name="nfc_how_it_works_title">Cómo pagar na terminal</string>
+  <string name="nfc_how_it_works_title">Pagando na terminal</string>
   <!-- Content for text explaning how to pay at a payment terminal in a store -->
   <!-- Button the user can click to indicate he understood and dismiss the screen -->
   <string name="nfc_how_it_works_got_it">Coyío</string>
@@ -5311,6 +5318,7 @@
   <!-- Wi-Fi state - Disconnected [CHAR LIMIT=NONE] -->
   <string name="disconnected">Desconeutada</string>
   <!-- Summary of data usage [CHAR LIMIT=NONE] -->
+  <string name="data_usage_summary_format"><xliff:g id="amount" example="50%">%1$s</xliff:g> de datos usaos</string>
   <!-- Summary of notifications [CHAR LIMIT=NONE] -->
   <!-- Summary of notifications when no apps are blocked [CHAR LIMIT=NONE] -->
   <!-- Summary of apps [CHAR LIMIT=NONE] -->
@@ -5346,6 +5354,7 @@
   <!-- Title of condition that cellular data is off [CHAR LIMIT=30] -->
   <!-- Summary of condition that cellular data is off [CHAR LIMIT=NONE] -->
   <!-- Title of condition that background data is off [CHAR LIMIT=30] -->
+  <string name="condition_bg_data_title">L\'aforrador de datos ta activáu</string>
   <!-- Summary of condition that background data is off [CHAR LIMIT=NONE] -->
   <!-- Title of condition that work mode is off [CHAR LIMIT=30] -->
   <!-- Summary of condition that work mode is off [CHAR LIMIT=NONE] -->
@@ -5362,8 +5371,11 @@
   <!-- Name of the setting to disable the automatic update -->
   <!-- Label for category for data usage [CHAR LIMIT=30] -->
   <!-- Label for cellular data usage in data usage screen [CHAR LIMIT=60] -->
+  <string name="cellular_data_usage">Usu de datos móviles</string>
   <!-- Label for wifi data usage in data usage screen [CHAR LIMIT=60] -->
+  <string name="wifi_data_usage">Usu de datos del Wi-Fi</string>
   <!-- Label for ethernet data usage in data usage screen [CHAR LIMIT=60] -->
+  <string name="ethernet_data_usage">Usu de datos d\'ethernet</string>
   <!-- Label for section about wifi in data usage screen [CHAR LIMIT=60] -->
   <!-- Label for section about ethernet in data usage screen [CHAR LIMIT=60] -->
   <string name="ethernet">Ethernet</string>
@@ -5391,6 +5403,7 @@
          [CHAR LIMIT=50] -->
   <!-- Description of number of apps allowed to ignore Data Saver [CHAR LIMIT=NONE] -->
   <!-- Name of Data Saver screens [CHAR LIMIT=30] -->
+  <string name="data_saver_title">Aforrador de datos</string>
   <!-- Button that leads to list of apps with unrestricted data access [CHAR LIMIT=60] -->
   <!-- Description of message shown when app is blacklisted for background data access [CHAR LIMIT=NONE] -->
   <!-- Summary for the Data Saver feature being on [CHAR LIMIT=NONE] -->
@@ -5464,6 +5477,7 @@
   <!-- Title of screen controlling which apps have access to send premium SMS messages [CHAR LIMIT=60] -->
   <!-- [CHAR LIMIT=25] Bluetooth is disabled. -->
   <!-- [CHAR LIMIT=60] Name of dev option called demo mode -->
+  <string name="demo_mode">Mou demostración</string>
   <!-- Title text for connecting to customer support [CHAR LIMIT=80]-->
   <!-- Title text for connecting to 24/7 available customer support [CHAR LIMIT=80]-->
   <!-- Content description for connecting customer support. The "24 7" part indicates

@@ -28,16 +28,18 @@
   <!-- Launch Dev Tools -->
   <string name="development_tools_title">Herramientas de desarrollo</string>
   <!-- Setting checkbox title for root access -->
-  <string name="root_access">Acceso root</string>
-  <string name="root_access_warning_title">¿Permitir acceso root?</string>
-  <string name="root_access_warning_message">¡Permitir que las aplicaciones tengan acceso root es muy peligroso y puede comprometer la seguridad del dispositivo!</string>
-  <string name="root_access_none">Deshabilitado</string>
-  <string name="root_access_apps">Solo aplicaciones</string>
-  <string name="root_access_adb">Solo ADB</string>
+  <string name="root_access">Acceso de Superusuario (root)</string>
+  <string name="root_access_warning_title">¿Permitir acceso de Superusuario?</string>
+  <string name="root_access_warning_message">¡Permitir a las aplicaciones solicitar acceso de Superusuario es muy peligroso y puede comprometer la seguridad del sistema!</string>
+  <string name="root_access_none">Desactivado</string>
+  <string name="root_access_apps">Sólo aplicaciones</string>
+  <string name="root_access_adb">Sólo ADB</string>
   <string name="root_access_all">Aplicaciones y ADB</string>
   <!-- Preference link for root appops -->
-  <!-- About phone screen, HEXAGON version -->
-  <string name="mod_version">Versión de HEXAGON</string>
+  <string name="root_appops_title">Gestionar acceso de Superusuario (root)</string>
+  <string name="root_appops_summary">Ver y controlar las reglas de Superusuario</string>
+  <!-- About phone screen, LineageOS version -->
+  <string name="mod_version">Versión de LineageOS</string>
   <string name="mod_version_default">Desconocido</string>
   <!-- About phone screen, Device model -->
   <string name="device_model">Modelo de dispositivo</string>
@@ -124,8 +126,9 @@
   <string name="app_ops_summaries_toggle_wifi">activar/desactivar Wi-Fi</string>
   <string name="app_ops_summaries_toggle_bluetooth">activar/desactivar la conexión Bluetooth</string>
   <string name="app_ops_summaries_start_at_boot">iniciar en el arranque</string>
-  <string name="app_ops_summaries_toggle_nfc">activar/desactivar el NFC</string>
-  <string name="app_ops_summaries_superuser">acceso root</string>
+  <string name="app_ops_summaries_toggle_nfc">alternar NFC</string>
+  <string name="app_ops_summaries_toggle_mobile_data">alternar datos móviles</string>
+  <string name="app_ops_summaries_superuser">acceso de Superusuario (root)</string>
   <!-- User display names for app ops codes - extension of AOSP -->
   <string name="app_ops_labels_coarse_location">Ubicación aproximada</string>
   <string name="app_ops_labels_fine_location">Ubicación precisa</string>
@@ -193,8 +196,9 @@
   <string name="app_ops_labels_toggle_wifi">Activar/desactivar Wi-Fi</string>
   <string name="app_ops_labels_toggle_bluetooth">Activar/desactivar la conexión Bluetooth</string>
   <string name="app_ops_labels_start_at_boot">Iniciar en el arranque</string>
-  <string name="app_ops_labels_toggle_nfc">Activar/desactivar el NFC</string>
-  <string name="app_ops_labels_superuser">Acceso root</string>
+  <string name="app_ops_labels_toggle_nfc">Alternar NFC</string>
+  <string name="app_ops_labels_toggle_mobile_data">Alternar datos móviles</string>
+  <string name="app_ops_labels_superuser">Acceso de Superusuario (root)</string>
   <!-- App ops permissions -->
   <string name="app_ops_permissions_allowed">Permitir</string>
   <string name="app_ops_permissions_ignored">Ignorado</string>
@@ -234,6 +238,8 @@
   <!-- Memory -->
   <string name="memory_startup_apps_title">Aplicaciones iniciadas en el arranque</string>
   <!-- Advanced restart options -->
+  <string name="advanced_reboot_title">Reinicio avanzado</string>
+  <string name="advanced_reboot_summary">Al activar esta opción, se incluirán en el menú de apagado opciones para reiniciar en modo recovery, bootloader o realizar un reinicio rápido</string>
   <!-- PIN scramble -->
   <string name="unlock_scramble_pin_layout_title">Disposición aleatoria</string>
   <string name="unlock_scramble_pin_layout_summary">Cambiar la disposición de los números del PIN para desbloquear el dispositivo</string>
@@ -311,7 +317,46 @@
   <string name="hotstpot_inactivity_timeout_1_minute">1 minuto</string>
   <string name="hotstpot_inactivity_timeout_5_minutes">5 minutos</string>
   <string name="hotstpot_inactivity_timeout_10_minutes">10 minutos</string>
-  <!-- Wake on plug -->
-  <string name="wake_when_plugged_or_unplugged_title">Activar con cargador</string>
-  <!-- Heads-up -->
+  <string name="hotstpot_inactivity_timeout_never_summary_text">El punto de acceso portátil Wi\u2011Fi no se apagará nunca</string>
+  <string name="hotstpot_inactivity_timeout_summary_text">El punto de acceso portátil Wi\u2011Fi se apagará después de <xliff:g id="timeout">%1$s</xliff:g></string>
+  <!-- Per-app data restrictions -->
+  <string name="data_usage_app_restrict_data_category_title">Acceso a los datos móviles</string>
+  <string name="data_usage_app_restrict_wifi_category_title">Acceso a los datos Wi\u2011Fi</string>
+  <!-- Title for switch to block app data usage [CHAR LIMIT=30] -->
+  <string name="data_usage_app_restrict_all_data_title">Desactivar acceso de datos móviles</string>
+  <!-- Summary for switch to block app data usage [CHAR LIMIT=NONE] -->
+  <string name="data_usage_app_restrict_all_data_summary">Evitar cualquier uso de datos a través de redes móviles</string>
+  <!-- Title for switch to block app data usage [CHAR LIMIT=30] -->
+  <string name="data_usage_app_restrict_all_wifi_title">Desactivar el acceso a todos los datos Wi\u2011Fi</string>
+  <!-- Summary for switch to block app data usage [CHAR LIMIT=NONE] -->
+  <string name="data_usage_app_restrict_all_wifi_summary">Impedir cualquier utilización del acceso a datos mediante redes de Wi\u2011Fi</string>
+  <!-- Volume link notification -->
+  <string name="volume_link_notification_title">Vincular tonos y volumen de notificaciones</string>
+  <!-- Launch music player when headset is connected -->
+  <string name="headset_connect_player_title">Iniciar el reproductor de música</string>
+  <string name="headset_connect_player_summary">Iniciar el reproductor de música predefinido al conectar los auriculares</string>
+  <!-- Update recovery -->
+  <string name="update_recovery_title">Actualizar recovery</string>
+  <string name="update_recovery_summary">Actualizar recovery en conjunto con el sistema</string>
+  <string name="update_recovery_on_warning">AVISO: Con esta característica activada, la recuperación instalada se reemplazará por la incluida en la versión actual del sistema.\n\nLa recuperación se actualizará junto con algunas mejoras en el sistema, lo que garantiza la compatibilidad con versiones futuras.\n\n¿Quieres activar esta característica?</string>
+  <string name="update_recovery_off_warning">ADVERTENCIA: Con esta característica desactivada, la recuperación instalada no se actualizará con las actualizaciones del sistema.\n\nQuizás sea imposible instalar versiones futuras del sistema con un recovery desactualizado o incompatible.\n\n¿Quieres desactivar esta característica?</string>
+  <!-- Status bar - double tap to sleep -->
+  <string name="status_bar_double_tap_to_sleep_title">Doble pulsación para suspender</string>
+  <string name="status_bar_double_tap_to_sleep_summary">Pulsa dos veces la barra de estado para apagar la pantalla</string>
+  <string name="sim_enabler_summary"><xliff:g id="displayName">%1$s </xliff:g> es <xliff:g id="status" example="disabled">%2$s </xliff:g></string>
+  <string name="sim_enabled">activada</string>
+  <string name="sim_disabled">desactivada</string>
+  <string name="sim_missing">ausente o defectuosa</string>
+  <string name="sim_enabler_need_disable_sim">La tarjeta SIM se desactivará. ¿Quieres continuar?</string>
+  <string name="sim_enabler_will_disable_sim_title">Atención</string>
+  <string name="sim_enabler_need_switch_data_service">Se desactivará esta SIM y la SIM <xliff:g id="slotid">%1$s</xliff:g> se utilizará para servicios de datos. ¿Deseas continuar?</string>
+  <string name="sim_enabler_airplane_on">No se puede realizar la operación mientras esté activado el modo avión.</string>
+  <string name="sim_enabler_in_call">Imposible realizar la operación mientras haya una llamada en curso.</string>
+  <string name="sim_enabler_both_inactive">No es posible desactivar todas las tarjetas SIM</string>
+  <string name="sim_enabler_enabling">Activando\u2026</string>
+  <string name="sim_enabler_disabling">Desactivando\u2026</string>
+  <string name="sub_activate_success">SIM activada.</string>
+  <string name="sub_activate_failed">Activación fallida.</string>
+  <string name="sub_deactivate_success">SIM desactivada.</string>
+  <string name="sub_deactivate_failed">Error de desactivación.</string>
 </resources>
