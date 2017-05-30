@@ -32,6 +32,8 @@
     <string name="about_summary">H.E.X Android <xliff:g id="version" example="6.0">%1$s</xliff:g></string>
     <string name="header_category_hexagonrom">Cá nhân hóa</string>
     <string name="summary_hex">Tùy chỉnh các cài đặt cá nhân</string>
+    <!-- Hex OTA -->
+    <string name="hex_ota">Cập nhật hệ thống</string>
     <!-- Navigation Bar -->
     <string name="navigation_category">Phím điều hướng</string>
     <string name="navbar_interface_title">Interface</string>
