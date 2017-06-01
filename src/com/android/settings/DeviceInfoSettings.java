@@ -151,7 +151,6 @@ public class DeviceInfoSettings extends SettingsPreferenceFragment implements In
         removePreferenceIfPropertyMissing(getPreferenceScreen(), KEY_MBN_VERSION,
                 PROPERTY_MBN_VERSION);
         findPreference(KEY_HEXAGON_VERSION).setEnabled(true);
-        findPreference(KEY_HEXAGON_VERSION).setEnabled(true);
         setValueSummary(KEY_MOD_BUILD_DATE, "ro.build.date");
 
         if (!SELinux.isSELinuxEnabled()) {
